@@ -1,0 +1,17 @@
+{
+	"name": "perstore",
+	"author": "Kris Zyp",
+	"email": "kriszyp@gmail.com",
+	"dependencies": ["narwhal", "commonjs-utils"],
+	"contributors": [],
+	"keywords": [
+		"persistence",
+		"object",
+		"store",
+		"persevere"
+	],
+	"githubName": "perstore",
+	"type": "zip",
+	"location": "http://github.com/kriszyp/perstore/zipball/master",
+	"license":"AFL/BSD"
+}
