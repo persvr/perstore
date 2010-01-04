@@ -1,4 +1,4 @@
-var assert = require("test/assert"),
+var assert = require("assert"),
 	store = require("stores").DefaultStore("TestStore"),
 	model = require("model").Model("TestStore", store, {
 		prototype: {		
@@ -26,22 +26,22 @@ exports.model = model;
 exports.CreateTests = function(model){
 	return {
 		testGet: function(){
-			assert.eq(model.get(1).foo, 2);
+			assert.equal(model.get(1).foo, 2);
 		},
 
 		testLoad: function(){
 			var object = model.get(1);
 			object = object.load();
-			assert.eq(object.foo, 2);
+			assert.equal(object.foo, 2);
 		},
 
 		testQuery: function(){
 			var count = 0;
 			model.query("bar=hi").forEach(function(item){
-				assert.eq(item.bar, "hi");
+				assert.equal(item.bar, "hi");
 				count++;
 			});
-			assert.eq(count, 1);
+			assert.equal(count, 1);
 		},
 		
 		testSave: function(){
@@ -50,36 +50,36 @@ exports.CreateTests = function(model){
 			object.rand = newRand;
 			object.save();
 			object = model.get(1);
-			assert.eq(object.rand, newRand);
+			assert.equal(object.rand, newRand);
 		},
 
 		testGetProperty: function(){
 			var bar = model.get(2).get("bar");
-			assert.eq(bar, "hi");
+			assert.equal(bar, "hi");
 		},
 
 		testLink: function(){
 			var fooTarget = model.get(1).get("foo");
-			assert.eq(fooTarget.id, 2);
-			assert.eq(fooTarget.bar, "hi");
+			assert.equal(fooTarget.id, 2);
+			assert.equal(fooTarget.bar, "hi");
 		},
 
 		testSchemaEnforcement: function(){
 			var object = model.get(1);
 			object.foo = "not a number";
-			assert.throwsError(function(){
+			assert["throws"](function(){
 				object.save();
 			});
 		},
 
 		testMethod: function(){
 			var object = model.get(1);
-			assert.eq(model.get(1).testMethod(), 2);
+			assert.equal(model.get(1).testMethod(), 2);
 		},
 
 		testStaticMethod: function(){
 			var object = model.staticMethod(1);
-			assert.eq(object.id, 1);
+			assert.equal(object.id, 1);
 		}
 	};
 };

@@ -1,4 +1,4 @@
-var assert = require("test/assert"),
+var assert = require("assert"),
 	model = require("./model").model,
 	CreateTests = require("./model").CreateTests;
 	Restrictive = require("facet").Restrictive,
@@ -6,12 +6,15 @@ var assert = require("test/assert"),
 
 var permissiveFacet = Permissive(model, {
 	extraStaticMethod: function(){
-		
+		return 4;
 	}
 });
 var permissiveTests = CreateTests(permissiveFacet);
 for(var i in permissiveTests){
 	exports[i + "Permissive"] = permissiveTests[i];
+}
+exports.testExtraStaticMethod = function(){
+	assert.equal(permissiveFacet.extraStaticMethod(), 4);
 }
 
 var restrictiveFacet = Restrictive(model);
@@ -27,7 +30,7 @@ exports.testStaticMethodRestrictive = shouldFail(restrictiveTests.testStaticMeth
 
 function shouldFail(test){
 	return function(){
-		assert.throwsError(test);
+		assert["throws"](test);
 	};
 };
 
