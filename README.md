@@ -104,13 +104,13 @@ a query AST-style structured object for ease of use.
 create(object) - Stores a new record. This acts similar to put, but should only be called
 when the record does not already exist. Stores do not need to implement this 
 method, but may implement for ease of differentiating between creation of new 
-records and updates. 
+records and updates. This should return the identifier of the newly create record. 
 
-startTransaction() - If it exists, this is called when a transaction is started.
+transaction() - If it exists, this is called when a transaction is started. This should return
+a transaction object with the following two functions:
 
-commitTransaction() - If it exists, this is called when a transaction is committed.
-
-abortTransaction() - If it exists, this is called when a transaction is aborted.
+- commit() - This is called when a transaction is committed.
+- abort() - This is called when a transaction is aborted.
     
 Perstore is part of the Persevere project, and therefore is licensed under the
 AFL or BSD license. The Persevere project is administered under the Dojo foundation,

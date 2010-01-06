@@ -20,30 +20,25 @@ exports.SQLDatabase = function(parameters){
 	}
 	adapter.initParameters(parameters);
 	return {
-		transaction: function(callback){
-			adapter.startTransaction();
-			var suceeded;
-			try{
-				var result = callback({
-					executeSql: function(query, parameters){
-						// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
-						var rawResults = adapter.executeSql(query, parameters);
-						var results = {rows:extendSome(rawResults)};
-						if(rawResults.insertId){
-							results.insertId = rawResults.insertId; 
-						}
-						return results;
-					}
-				});
-				adapter.commitTransaction();
-				suceeded = true;
-				return result;
+		executeSql: function(query, parameters){
+			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
+			var rawResults = adapter.executeSql(query, parameters);
+			var results = {rows:extendSome(rawResults)};
+			if(rawResults.insertId){
+				results.insertId = rawResults.insertId; 
 			}
-			finally{
-				if(!suceeded){
+			return results;
+		},
+		transaction: function(){
+			adapter.startTransaction();
+			return {
+				commit: function(){
+					adapter.commitTransaction();
+				},
+				abort: function(){
 					adapter.abortTransaction();
 				}
-			}
+			};
 		}
 	};	
 }
