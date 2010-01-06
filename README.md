@@ -35,8 +35,13 @@ Typical usage of Perstore looks like:
     someObject.foo = "bar"; // make a change
     someObject.save(); // and save it
     
-    store.delete(someOtherId); // delete an object
+    model.delete(someOtherId); // delete an object
+    
+    var facet = require("facet").Restrictive(model, {
+    });
 
+	facet.delete(someId) -> will fail, as the facet has not allowed access to delete().
+	
 Perstore comes with several data stores including:
 
 - sql - An SQL-based object store. This stores and retrieves objects as rows in 
