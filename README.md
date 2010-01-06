@@ -38,23 +38,25 @@ Typical usage of Perstore looks like:
     store.delete(someOtherId); // delete an object
 
 Perstore comes with several data stores including:
-* sql - An SQL-based object store. This stores and retrieves objects as rows in 
+
+- sql - An SQL-based object store. This stores and retrieves objects as rows in 
 databases. Currently this only fully implemented in Rhino, but the sql data store can easily
 wrap an SQL database provider that simple provides an W3C SQL database style
 executeSql(sql) function.
-* memory - An in-memory data store. None of the data in this store will be persisted
-* js-file - Reads and stores all data in the store from a JSON (with JS extensions for 
+- memory - An in-memory data store. None of the data in this store will be persisted
+- js-file - Reads and stores all data in the store from a JSON (with JS extensions for 
 dates and other non-standard JSON types) file.
-* remote - This can connect to a remote HTTP/REST based JSON server to store and 
+- remote - This can connect to a remote HTTP/REST based JSON server to store and 
 retrieve data.
 
 Perstore also includes several store wrappers that can be used to compose more 
 sophisticate stores by adding functionality:
-* cache - Adds in-memory caching support to a provided store
-* aggregate - Combines record data from multiple stores into a single object store
-* replicated - Provides data replication across multiple stores
-* full-text - Adds full text indexing (currently only available in Rhino through Lucene)
-* inherited - Provides a super-sub type relationship between data stores
+
+- cache - Adds in-memory caching support to a provided store
+- aggregate - Combines record data from multiple stores into a single object store
+- replicated - Provides data replication across multiple stores
+- full-text - Adds full text indexing (currently only available in Rhino through Lucene)
+- inherited - Provides a super-sub type relationship between data stores
 
 Perstore is also designed to allow easy construction of new data stores. A data store 
 in Perstore is a JavaScript object with any or all of the following functions. 
@@ -77,9 +79,10 @@ query(queryString, options) - This executes a query against the data store. The
 queryString parameter defines the actual query, and the options parameter should be
 an object that provides extra information. The following properties on the options
 object may be included:
-* start - The offset index to start at in the result set
-* end - The offset index to end at in the result set
-* parameters - An array of values for parameterized queries
+
+- start - The offset index to start at in the result set
+- end - The offset index to end at in the result set
+- parameters - An array of values for parameterized queries
 
 The function should generally return an array representing the result set of the query 
 (unless the query creates a single aggregate object or value). While there is no 
