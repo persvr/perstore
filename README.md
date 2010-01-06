@@ -42,7 +42,7 @@ Typical usage of Perstore looks like:
 
 	facet.delete(someId) -> will fail, as the facet has not allowed access to delete().
 	
-Perstore comes with several data stores including:
+Perstore comes with several data stores including (in the store directory):
 
 - sql - An SQL-based object store. This stores and retrieves objects as rows in 
 databases. Currently this only fully implemented in Rhino, but the sql data store can easily
@@ -55,7 +55,7 @@ dates and other non-standard JSON types) file.
 retrieve data.
 
 Perstore also includes several store wrappers that can be used to compose more 
-sophisticate stores by adding functionality:
+sophisticate stores by adding functionality (also in the store directory):
 
 - cache - Adds in-memory caching support to a provided store
 - aggregate - Combines record data from multiple stores into a single object store
@@ -96,7 +96,10 @@ encoded queries like:
 
     foo=value&bar=2
 
-More extensive query syntax can be based on the [discussions here](http://groups.google.com/group/json-query). 
+More extensive query syntax can be based on the 
+[discussions here](http://groups.google.com/group/json-query). Implementors are
+encouraged to utilize the resource-query module in perstore for parsing queries into
+a query AST-style structured object for ease of use. 
 
 create(object) - Stores a new record. This acts similar to put, but should only be called
 when the record does not already exist. Stores do not need to implement this 
