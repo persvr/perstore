@@ -42,7 +42,45 @@ Typical usage of Perstore looks like:
 
 	facet.delete(someId) -> will fail, as the facet has not allowed access to delete().
 	
-Perstore comes with several data stores including (in the store directory):
+A model is defined with the Model constructor in the "model" module. A Model definition
+may follow the JSON schema definition for contractual constraints (usually defining property
+type constraints in the "properties" property and relations with the "links" property). 
+property. It may also contain a prototype property which defines the prototype object
+for all instances of the model. Methods can be defined on the prototype object, as well
+as directly on the model. REST methods such as get, put, and delete are implemented
+directly on the model, and can be overriden for specific functionality. Perstore roughly 
+follows the [class definition structure used by Persevere 1.0](http://docs.persvr.org/documentation/storage-model/json-schema)
+    
+Perstore provides easy to use object persistence mechanism. Persisted model object
+instances have three default methods:
+
+- save() - Saves any changes that have been made to an object to the data store.
+- load() - If the object has not been fully loaded (sometime queries may return partial
+object), the object will be fully loaded from the data store.
+- get(property) - Gets the value of the given property. If the property is a link relation 
+or reference, get() will resolve and load the target object. For simple properties,
+object.get("prop") and object.prop will yield the same value.
+
+In the initial example, object persistence is demonstrated with the "someObject"
+variable. The object is loaded (via the get call to the model), modified, and saved
+(with the save() call).
+
+Facets provide secure, controlled access to models. The facet module comes provides
+two facet constructors: Permissive and Restrictive. A Permissive facet allows all actions
+on the model by default. Methods can be defined/overriden in the Permissive definition
+to control or disable access to certain functionality. A Restrictive facet only allows read
+access methods by default (get and query). One can define/override methods to allow
+explicit access to other methods such as put or create. An example facet that only
+allows read access and creation of new objects:
+
+    var facet = require("facet").Restrictive(model, {
+        create: function(object){ // allow create
+            return model.create(object);
+        }
+    });
+
+Models wrap data stores, which provide the low level interaction with the database or 
+storage system. Perstore comes with several data stores including (in the store directory):
 
 - sql - An SQL-based object store. This stores and retrieves objects as rows in 
 databases. Currently this only fully implemented in Rhino, but the sql data store can easily
@@ -63,10 +101,12 @@ sophisticate stores by adding functionality (also in the store directory):
 - full-text - Adds full text indexing (currently only available in Rhino through Lucene)
 - inherited - Provides a super-sub type relationship between data stores
 
-Perstore is also designed to allow easy construction of new data stores. A data store 
-in Perstore is a JavaScript object with any or all of the following functions. 
-All of the functions are optional. If they do not exist, it indicates that the store does
-not support the said functionality. They are roughly listed in order of importantance 
+The following is store API for Perstore. The same API is used for data stores, store 
+models, and facets. All of the functions are optional. If they do not exist, it indicates 
+that the store or model does not support or allow the said functionality. All of the 
+functions may return a promise instead of 
+the actual return value if they require asynchronous processing to complete the 
+operation. They are roughly listed in order of importance 
 (get(id) is the most important function):
 
 get(id) - Finds the persisted record with the given identifier from the store and returns 
@@ -111,10 +151,28 @@ a transaction object with the following two functions:
 
 - commit() - This is called when a transaction is committed.
 - abort() - This is called when a transaction is aborted.
+
+Perstore is designed to allow easy construction of new data stores. A data store 
+in Perstore is a JavaScript object with any or all of the functions defined above.
     
 Perstore is part of the Persevere project, and therefore is licensed under the
 AFL or BSD license. The Persevere project is administered under the Dojo foundation,
 and all contributions require a Dojo CLA.
 
-See the main Persevere site for more information:
-http://www.persvr.org/
+See the main Persevere project for more information:
+
+### Homepage:
+
+* [http://persvr.org/](http://persvr.org/)
+
+### Source & Download:
+
+* [http://github.com/kriszyp/perstore/](http://github.com/kriszyp/perstore)
+
+### Mailing list:
+
+* [http://groups.google.com/group/persevere-framework](http://groups.google.com/group/persevere-framework)
+
+### IRC:
+
+* [\#persevere on irc.freenode.net](http://webchat.freenode.net/?channels=persevere)
