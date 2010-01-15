@@ -18,7 +18,7 @@ exports.SQLDatabase = function(parameters){
 	return {
 		executeSql: function(query, parameters){
 			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
-			connectionProvider.query(query).then(function(results){
+			currentConnection.query(query).then(function(results){
 				return {
 					rows: results
 				};
@@ -28,10 +28,12 @@ exports.SQLDatabase = function(parameters){
 			currentConnection = connectionProvider(parameters); 
 			return {
 				commit: function(){
-					//?
+					currentConnection.query("COMMIT");
+					currentConnection.close();
 				},
 				abort: function(){
-					//?
+					currentConnection.query("ABORT");
+					currentConnection.close();
 				}
 			};
 		}
