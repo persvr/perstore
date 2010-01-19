@@ -146,6 +146,9 @@ when the record does not already exist. Stores do not need to implement this
 method, but may implement for ease of differentiating between creation of new 
 records and updates. This should return the identifier of the newly create record. 
 
+subscribe(resource, callback) - Subscribes to changes in the given resource or set of 
+resources. The callback is called whenever data is changed in the monitored resource(s).
+
 transaction() - If it exists, this is called when a transaction is started. This should return
 a transaction object with the following two functions:
 
