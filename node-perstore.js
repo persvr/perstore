@@ -21,7 +21,4 @@ require.paths.push.apply(require.paths, packagePaths.map(function(path){
 	return path + "lib";
 }));
 
-var sys = require("sys");
-// upgrade to ES5 and CommonJS globals 
-global = this;
-require("global");
+require("node-commonjs");
