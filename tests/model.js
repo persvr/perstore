@@ -12,6 +12,10 @@ var assert = require("assert"),
 		properties: {
 			foo: {
 				type: "number"
+			},
+			bar: {
+				optional: true,
+				unique: true
 			}
 		},
 		links: [
@@ -69,6 +73,12 @@ exports.CreateTests = function(model){
 			object.foo = "not a number";
 			assert["throws"](function(){
 				object.save();
+			});
+		},
+
+		testSchemaUnique: function(){
+			assert["throws"](function(){
+				model.put({foo:3, bar:"hi"});
 			});
 		},
 
