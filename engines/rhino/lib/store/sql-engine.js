@@ -11,7 +11,8 @@ var drivers = {
 	derby: "org.apache.derby.jdbc.EmbeddedDriver",
 	hsqldb: "org.hsqldb.jdbcDriver",
 	oracle: "oracle.jdbc.driver.OracleDriver",
-	postgres: "org.postgresql.Driver"
+	postgres: "org.postgresql.Driver",
+	mssql: "net.sourceforge.jtds.jdbc.Driver"
 }
 exports.SQLDatabase = function(parameters){
 	var adapter = new org.persvr.store.SQLStore();
