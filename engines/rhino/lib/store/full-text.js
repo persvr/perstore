@@ -46,7 +46,7 @@ var FullText = exports.FullText = function(store, name){
 var QueryRegExp = require("../json-query").QueryRegExp;
 
 var FullTextRegExp = exports.FullTextRegExp = QueryRegExp(/\?(.*&)?fulltext\($value\)(&.*)?/);
-exports.JsonQueryToFullTextSearch = function(tableName, indexedColumns){
+exports.JsonQueryToFullTextSearch = function(tableName, indexedProperties){
 	return function(query, options){
 		var matches;
 		query = decodeURIComponent(query);
