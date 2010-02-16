@@ -1,4 +1,4 @@
-var extendSome = require("lazy").extendSome;
+var LazyArray = require("lazy-array").LazyArray;
 var FullText = exports.FullText = function(store, name){
 	searcher = new org.persvr.store.LuceneSearch("lucene/" + name);
 	var defaultPut = store.put;
@@ -9,12 +9,12 @@ var FullText = exports.FullText = function(store, name){
 		return id;
 	};
 	store.fulltext = function(query, field, options){
-		var idResults = extendSome(searcher.query(query, field, options.start || 0, options.end || 100000000, null));
+		var idResults = LazyArray(searcher.query(query, field, options.start || 0, options.end || 100000000, null));
 		return {
 			query: "?id.in(" + idResults.join(",") + ")",
 			totalCount: idResults.totalCount
 		};
-		/*return extendSome({
+		/*return LazyArray({
 			some: function(callback){
 				idResults.some(function(id){
 					try{
