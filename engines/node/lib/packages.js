@@ -1,3 +1,3 @@
-var posix = require("posix");
+var fs = require("fs");
 
-exports.root = JSON.parse(posix.cat("local.json").wait());
+exports.root = JSON.parse(fs.readFileSync("local.json"));
