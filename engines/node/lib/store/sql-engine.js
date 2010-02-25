@@ -5,7 +5,6 @@
  */
 
 
-var extendSome = require("lazy").extendSome;
 exports.SQLDatabase = function(parameters){
 	var connectionProvider;
 	if(parameters.type == "postgres"){

@@ -4,7 +4,7 @@
  */
 
 
-var extendSome = require("lazy").extendSome;
+var LazyArray = require("lazy-array").LazyArray;
 var drivers = {
 	mysql: "com.mysql.jdbc.Driver",
 	sqlite: "org.sqlite.JDBC",
@@ -24,7 +24,7 @@ exports.SQLDatabase = function(parameters){
 		executeSql: function(query, parameters){
 			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
 			var rawResults = adapter.executeSql(query, parameters);
-			var results = {rows:extendSome(rawResults)};
+			var results = {rows:LazyArray(rawResults)};
 			if(rawResults.insertId){
 				results.insertId = rawResults.insertId; 
 			}
