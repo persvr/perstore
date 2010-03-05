@@ -53,7 +53,7 @@ exports.MongoDB = function(options){
 		put: function(object, directives){
 			var id = directives.id || object[idAttribute] || Math.random().toString().substring(2);
 			var search = createIdSearch(id);
-			print("put " + id + " " + directives.overwrite);
+
 			if(directives.overwrite === false){
 				// do an insert, and check to make sure no id matches first
 				return callAsync(collection.count, [search]).then(function(count){
