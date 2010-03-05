@@ -22,7 +22,7 @@ exports.MongoDB = function(options){
 		search[idAttribute] = id;
 		return search;
 	}
-	//var collection;
+	var collection;
 	database.open(function(db){
 		db.collection(options.collection, function(err, coll){
 			if(err){
