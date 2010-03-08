@@ -15,7 +15,7 @@ var drivers = {
 	mssql: "net.sourceforge.jtds.jdbc.Driver"
 }
 exports.SQLDatabase = function(parameters){
-	var adapter = new org.persvr.store.SQLStore();
+	var adapter = new Packages.org.persvr.store.SQLStore();
 	if(drivers[parameters.type]){
 		parameters.driver = drivers[parameters.type]; 
 	}
