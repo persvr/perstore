@@ -43,7 +43,7 @@
 //    ... executed when the promise fails
 //  });
 try{
-  var enqueue = require("event-queue").enqueue;
+  var enqueue = require("event-loop").enqueue;
 }
 catch(e){
   // squelch the error, and only complain if the queue is needed
@@ -367,8 +367,8 @@ exports.put = function(target, property, value){
  * @return the value of the promise;
  */
 exports.wait = function(target){
-  if(!queue){
-    throw new Error("Can not wait, the event-queue module is not available");
+  if(!queue.processNextEvent){
+    throw new Error("Can not wait, the event-loop module does not support processNextEvent");
   }
   if(target && typeof target.then === "function"){
     var isFinished, isError, result;    
