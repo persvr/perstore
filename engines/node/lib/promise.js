@@ -7,52 +7,9 @@
 // and Kris Kowal's work on promises.
 // // MIT License
 
-// A typical usage:
-// A default Promise constructor can be used to create a self-resolving deferred/promise:
-// var Promise = require("promise").Promise;
-//  var promise = new Promise();
-// asyncOperation(function(){
-//  Promise.resolve("succesful result");
-// });
-//  promise -> given to the consumer
-//  
-//  A consumer can use the promise
-//  promise.then(function(result){
-//    ... when the action is complete this is executed ...
-//   },
-//   function(error){
-//    ... executed when the promise fails
-//  });
-//
-// Alternately, a provider can create a deferred and resolve it when it completes an action. 
-// The deferred object a promise object that provides a separation of consumer and producer to protect
-// promises from being fulfilled by untrusted code.
-// var defer = require("promise").defer;
-//  var deferred = defer();
-// asyncOperation(function(){
-//  deferred.resolve("succesful result");
-// });
-//  deferred.promise -> given to the consumer
-//  
-//  Another way that a consumer can use the promise (using promise.then is also allowed)
-// var when = require("promise").when;
-// when(promise,function(result){
-//    ... when the action is complete this is executed ...
-//   },
-//   function(error){
-//    ... executed when the promise fails
-//  });
-try{
-  var enqueue = require("event-loop").enqueue;
-}
-catch(e){
-  // squelch the error, and only complain if the queue is needed
-}
-if(!enqueue){
-  enqueue = (typeof process !== "undefined" && process.nextTick) || function(func){
+var enqueue = (typeof process !== "undefined" && process.nextTick) || function(func){
     func();
   }
-}  
 var freeze = Object.freeze || function(){};
 
 /**
