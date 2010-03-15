@@ -8,6 +8,13 @@ exports.isFile = function(path){
 		return false;
 	}
 };
+exports.stat = function(path){
+	try{
+		return fs.statSync(path);
+	}catch(e){
+		return {size:0};
+	}
+};
 exports.join = function () {
     if (arguments.length == 1 && arguments[0] == "") {
         return '/';
