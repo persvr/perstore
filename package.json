@@ -10,6 +10,7 @@
 		"store",
 		"persevere"
 	],
+	"engines": {"node":">=0.1.30", "rhino": true},
 	"githubName": "perstore",
 	"type": "zip",
 	"location": "http://github.com/kriszyp/perstore/zipball/master",

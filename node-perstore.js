@@ -4,7 +4,7 @@
  */
 
 // first we add all the necessary paths to require.paths
-var packagesRoot = "../../../";
+var packagesRoot = "../../";
 var packagePaths = [""] // start with the current directory
 			.concat([ // now add alll the packages
 				"packages/perstore/",
@@ -16,9 +16,10 @@ var packagePaths = [""] // start with the current directory
 				].map(function(path){ // for each package, start in the right directory
 					return packagesRoot + path;
 				    }));
-				    
-require.paths.push.apply(require.paths, packagePaths.map(function(path){
+require.paths.unshift.apply(require.paths, packagePaths.slice(0, -2).map(addLib));
+require.paths.push.apply(require.paths, packagePaths.slice(-2).map(addLib));
+function addLib(path){
 	return path + "lib";
-}));
+}				    
 
 require("node-commonjs");

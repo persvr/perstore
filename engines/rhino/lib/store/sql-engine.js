@@ -1,6 +1,7 @@
 /**
  * This is an SQL database engine for Rhino
  * based on http://www.w3.org/TR/webdatabase/
+ * This relies on the jar file included with Perstore
  */
 
 
@@ -15,7 +16,7 @@ var drivers = {
 	mssql: "net.sourceforge.jtds.jdbc.Driver"
 }
 exports.SQLDatabase = function(parameters){
-	var adapter = new org.persvr.store.SQLStore();
+	var adapter = new Packages.org.persvr.store.SQLStore();
 	if(drivers[parameters.type]){
 		parameters.driver = drivers[parameters.type]; 
 	}
