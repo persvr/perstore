@@ -79,6 +79,6 @@ exports.CreateQueryTests = function(store){
 				lastFoo = item.foo;
 				return valid;
 			}, 3);
-		},
+		}
 	};
 }
