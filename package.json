@@ -11,6 +11,17 @@
 		"persevere"
 	],
 	"engines": {"node":">=0.1.30", "rhino": true},
+	"mappings": {
+		"commonjs-utils/": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/",
+		"file": "fs-promise"
+	},
+	"overlay": {
+		"narwhal": {
+			"mappings": {
+				"fs-promise": "./engines/rhino/lib/fs-promise"
+			}
+		}
+	},
 	"githubName": "perstore",
 	"type": "zip",
 	"location": "http://github.com/kriszyp/perstore/zipball/master",
