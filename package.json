@@ -12,8 +12,7 @@
 	],
 	"engines": {"node":">=0.1.30", "rhino": true},
 	"mappings": {
-		"commonjs-utils/": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/",
-		"file": "fs-promise"
+		"commonjs-utils/": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/"
 	},
 	"overlay": {
 		"narwhal": {
