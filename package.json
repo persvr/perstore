@@ -12,12 +12,18 @@
 	],
 	"engines": {"node":">=0.1.30", "rhino": true},
 	"mappings": {
-		"commonjs-utils/": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/"
+		"commonjs-utils": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/"
 	},
 	"overlay": {
 		"narwhal": {
 			"mappings": {
-				"fs-promise": "./engines/rhino/lib/fs-promise"
+				"fs-promise": "./engines/rhino/lib/fs-promise",
+				"store-engine": "./engines/rhino/lib/store-engine/"
+			}
+		},
+		"node": {
+			"mappings": {
+				"store-engine": "./engines/node/lib/store-engine/"
 			}
 		}
 	},
