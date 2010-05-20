@@ -14,6 +14,10 @@ exports.SQLDatabase = function(parameters){
 		currentConnection = new (require("jar:http://github.com/masuidrive/node-mysql/zipball/master!/lib/mysql.js")
 			.Connection)(parameters.host, parameters.name, parameters.username, parameters.password); 
 	}
+	else if(parameters.type == "sqlite"){
+		currentConnection = new (require("jar:http://github.com/orlandov/node-sqlite/zipball/master!/lib/sqlite.js")
+			.Connection)(parameters.host, parameters.name, parameters.username, parameters.password); 
+	}
 	else{
 		throw new Error("Unsupported database engine");
 	}
