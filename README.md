@@ -245,6 +245,10 @@ Which is the same as:
 
     and(or(eq(foo,3),eq(foo,bar)),lt(price,10))
 
+And to query a model/store:
+
+    MyModel.query("(foo=3|foo=bar)&price=lt=10")...
+    
 And using chained JS calls: 
 
 	var query = MyModel.query();
@@ -303,7 +307,35 @@ for more less operators):
 * ge(<property>,<value>) - Filters for objects where the specified property's value is greater than or equal to the provided value
 * ne(<property>,<value>) - Filters for objects where the specified property's value is not equal to the provided value
 
- 
+If you are writing a store, or want to introspect queries, you can use the parsed query data 
+structures. You can parse string queries with resource-query module's parseQuery function.
+Query objects have a "name" property and an "args" with an array of the arguments.
+For example:
+
+	require("perstore/resource-query").parseQuery("(foo=3|foo=bar)&price=lt=10") ->
+	{
+		operation: "and",
+		args: [
+			{
+				operation:"or",
+				args:[
+					{
+						operation:"eq",
+						args:["foo",3]
+					},
+					{
+						operation:"eq",
+						args:["foo","bar"]
+					}
+				]
+			},
+			{
+				operation:"or",
+				args:["price",10]
+			}
+		]
+	}
+				
 Licensing
 --------
 
