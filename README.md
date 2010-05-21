@@ -292,20 +292,20 @@ We can also do multiple property sorts. To sort by price in ascending order and 
 Here is a definition of the common operators (individual stores may have support
 for more less operators):
 
-* sort(<+|-><property) - Sorts by the given property in order specified by the prefix (+ for ascending, - for descending)  
-* select(<property>) - Returns an array of the given property value for each object
-* select(<property>,<property>,...) - Trims each object down to the set of properties defined in the arguments
-* in(<property>,<array-of-values>) - Filters for objects where the specified property's value is in the provided array
-* contains(<property>,<value | array-of-values>) - Filters for objects where the specified property's value is an array and the array contains the provided value or contains a value in the provided array
+* sort(&lt;+|->&lt;property) - Sorts by the given property in order specified by the prefix (+ for ascending, - for descending)  
+* select(&lt;property>) - Returns an array of the given property value for each object
+* select(&lt;property>,&lt;property>,...) - Trims each object down to the set of properties defined in the arguments
+* in(&lt;property>,&lt;array-of-values>) - Filters for objects where the specified property's value is in the provided array
+* contains(&lt;property>,&lt;value | array-of-values>) - Filters for objects where the specified property's value is an array and the array contains the provided value or contains a value in the provided array
 * slice(start,end) - Returns the given range of objects from the result set
-* and(<query>,<query>,...) - Applies all the given queries
-* or(<query>,<query>,...) - The union of the given queries
-* eq(<property>,<value>) - Filters for objects where the specified property's value is equal to the provided value
-* lt(<property>,<value>) - Filters for objects where the specified property's value is less than the provided value
-* le(<property>,<value>) - Filters for objects where the specified property's value is less than or equal to the provided value
-* gt(<property>,<value>) - Filters for objects where the specified property's value is greater than the provided value
-* ge(<property>,<value>) - Filters for objects where the specified property's value is greater than or equal to the provided value
-* ne(<property>,<value>) - Filters for objects where the specified property's value is not equal to the provided value
+* and(&lt;query>,&lt;query>,...) - Applies all the given queries
+* or(&lt;query>,&lt;query>,...) - The union of the given queries
+* eq(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is equal to the provided value
+* lt(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is less than the provided value
+* le(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is less than or equal to the provided value
+* gt(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is greater than the provided value
+* ge(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is greater than or equal to the provided value
+* ne(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is not equal to the provided value
 
 If you are writing a store, or want to introspect queries, you can use the parsed query data 
 structures. You can parse string queries with resource-query module's parseQuery function.
