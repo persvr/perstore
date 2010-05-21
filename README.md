@@ -294,6 +294,15 @@ for more less operators):
 * in(<property>,<array-of-values>) - Filters for objects where the specified property's value is in the provided array
 * contains(<property>,<value | array-of-values>) - Filters for objects where the specified property's value is an array and the array contains the provided value or contains a value in the provided array
 * slice(start,end) - Returns the given range of objects from the result set
+* and(<query>,<query>,...) - Applies all the given queries
+* or(<query>,<query>,...) - The union of the given queries
+* eq(<property>,<value>) - Filters for objects where the specified property's value is equal to the provided value
+* lt(<property>,<value>) - Filters for objects where the specified property's value is less than the provided value
+* le(<property>,<value>) - Filters for objects where the specified property's value is less than or equal to the provided value
+* gt(<property>,<value>) - Filters for objects where the specified property's value is greater than the provided value
+* ge(<property>,<value>) - Filters for objects where the specified property's value is greater than or equal to the provided value
+* ne(<property>,<value>) - Filters for objects where the specified property's value is not equal to the provided value
+
  
 Licensing
 --------
