@@ -314,23 +314,23 @@ For example:
 
 	require("perstore/resource-query").parseQuery("(foo=3|foo=bar)&price=lt=10") ->
 	{
-		operation: "and",
+		name: "and",
 		args: [
 			{
-				operation:"or",
+				name:"or",
 				args:[
 					{
-						operation:"eq",
+						name:"eq",
 						args:["foo",3]
 					},
 					{
-						operation:"eq",
+						name:"eq",
 						args:["foo","bar"]
 					}
 				]
 			},
 			{
-				operation:"or",
+				name:"or",
 				args:["price",10]
 			}
 		]
