@@ -318,7 +318,7 @@ for more less operators):
 * max(&lt;property?>) - Finds the maximum of every value in the array or if the property argument is provided, returns the maximum of the value of property for every object in the array 
 * min(&lt;property?>) - Finds the minimum of every value in the array or if the property argument is provided, returns the minimum of the value of property for every object in the array 
 * recurse(&lt;property?>) - Recursively searches, looking in children of the object as objects in arrays in the given property value
-
+* changes(&lt;since?>) - Returns a result set of all the objects that have been modified since the given parameter (which may be a timestamp or version number). This should include an indication of objects that have been deleted as well.  
 
 If you are writing a store, or want to introspect queries, you can use the parsed query data 
 structures. You can parse string queries with resource-query module's parseQuery function.
@@ -343,7 +343,7 @@ For example:
 				]
 			},
 			{
-				name:"or",
+				name:"lt",
 				args:["price",10]
 			}
 		]
