@@ -62,7 +62,7 @@ var queryPairs = {
     "nested comparisons": [
         {"a(b(le(c,d)))": {name:"and", args:[{name:"a", args:[{name:"b", args:[{name:"le", args:["c", "d"]}]}]}]}},
         {"a(b(c=le=d))": "a(b(le(c,d)))"},
-        {"a(b(c<=d))": "a(b(le(c,d)))"},
+        {"a(b(c<=d))": "a(b(le(c,d)))"}
     ],
     "arbitrary FIQL desugaring": [
         {"a=b=c": {name:"and", args:[{name:"b", args:["a", "c"]}]}},
@@ -73,11 +73,11 @@ var queryPairs = {
         {"a(b)&c": {name:"and", args:[{name:"a", args:["b"]}, "c"]}},
         {"a(b&c)": {}},
         {"a(b&(c))": {}},
-        {"a(b&c)": {}},
+        {"a(b&c)": {}}
     ],
     "or grouping": [
         {"a|b|c": {name:"and", args:[{name:"or", args:["a", "b", "c"]}]}},
-        {"a(b)|c": {name:"and", args:[{name:"or", args:[{name:"a", args:["b"]}, "c"]}]}},
+        {"a(b)|c": {name:"and", args:[{name:"or", args:[{name:"a", args:["b"]}, "c"]}]}}
     ],
     "complex grouping": [
         {"a&b|c": {name:"and", args:["a", {name:"or", args:["b", "c"]}]}},
@@ -115,7 +115,7 @@ var queryPairs = {
     "null coercion": [
         {"a(null)": {name:"and", args:[{name:"a", args:[null]}]}},
         {"a(null:b)": {name:"and", args:[{name:"a", args:[null]}]}},
-        {"a(string:null)": {name:"and", args:[{name:"a", args:["null"]}]}},
+        {"a(string:null)": {name:"and", args:[{name:"a", args:["null"]}]}}
     ],
     "complex coercion": [
         {"a=b|c=d&e=f|g=1": {name:"and", args:[ // XXX?
