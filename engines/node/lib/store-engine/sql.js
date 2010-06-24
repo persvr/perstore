@@ -4,7 +4,7 @@
  * Currently only supports Postgres
  */
 
-var defer = require("promise").defer;
+var defer = require("commonjs-utils/promise").defer;
 exports.SQLDatabase = function(parameters){
 	var connectionProvider;
 	if(parameters.type == "postgres"){
