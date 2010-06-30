@@ -304,7 +304,7 @@ for more less operators):
 * distinct() - Returns a result set with duplicates removed 
 * in(&lt;property>,&lt;array-of-values>) - Filters for objects where the specified property's value is in the provided array
 * contains(&lt;property>,&lt;value | array-of-values>) - Filters for objects where the specified property's value is an array and the array contains the provided value or contains a value in the provided array
-* slice(start,end) - Returns the given range of objects from the result set
+* limit(count,start,maxCount) - Returns the given range of objects from the result set
 * and(&lt;query>,&lt;query>,...) - Applies all the given queries
 * or(&lt;query>,&lt;query>,...) - The union of the given queries
 * eq(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is equal to the provided value
@@ -318,7 +318,6 @@ for more less operators):
 * max(&lt;property?>) - Finds the maximum of every value in the array or if the property argument is provided, returns the maximum of the value of property for every object in the array 
 * min(&lt;property?>) - Finds the minimum of every value in the array or if the property argument is provided, returns the minimum of the value of property for every object in the array 
 * recurse(&lt;property?>) - Recursively searches, looking in children of the object as objects in arrays in the given property value
-* changes(&lt;since?>) - Returns a result set of all the objects that have been modified since the given parameter (which may be a timestamp or version number). This should include an indication of objects that have been deleted as well.  
 
 If you are writing a store, or want to introspect queries, you can use the parsed query data 
 structures. You can parse string queries with resource-query module's parseQuery function.
