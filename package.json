@@ -26,7 +26,13 @@
 			"mappings": {
 				"store-engine": "./engines/node/lib/store-engine/"
 			}
-		}
+		},
+		"npm": {
+			"dependencies": {
+				"commonjs-utils": "*",
+				"tunguska": "*"
+			}
+		}		
 	},
 	"githubName": "perstore",
 	"type": "zip",
