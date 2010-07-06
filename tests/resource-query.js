@@ -1,5 +1,5 @@
 var assert = require("assert"),
-    resourceQuery = require("resource-query"),
+    resourceQuery = require("../lib/resource-query"),
     parseQuery = resourceQuery.parseQuery;
 
 
@@ -157,5 +157,5 @@ exports.testStringification = function() {
     // TODO
 };
 
-//if (require.main === module.id)
-    require("os").exit(require("test/runner").run(exports));
+if (require.main === module)
+    require("patr/runner").run(exports);
