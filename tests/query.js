@@ -82,3 +82,5 @@ exports.CreateQueryTests = function(store){
 		}
 	};
 }
+if (require.main === module)
+    require("patr/runner").run(exports);
