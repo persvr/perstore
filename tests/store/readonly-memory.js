@@ -7,3 +7,5 @@ var assert = require("assert"),
 exports.testGet = function(){
 	assert.equal(testStore.get(1).foo, 2);
 };
+if (require.main === module)
+    require("patr/runner").run(exports);

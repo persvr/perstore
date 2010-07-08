@@ -5,3 +5,6 @@ var tests = CreateQueryTests(testStore);
 for(var i in tests){
 	exports[i] = tests[i];
 }
+
+if (require.main === module)
+    require("patr/runner").run(exports);

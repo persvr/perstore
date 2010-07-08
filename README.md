@@ -180,8 +180,8 @@ in Perstore is a JavaScript object with any or all of the functions defined abov
 Querying
 ========
 
-Perstore provides a query parsing and execution library called resource-query, which is
-based on resource query language (RQL). RQL can be thought as basically a set of
+Perstore provides a query parsing and execution through [http://github.com/kriszyp/rql](resource query language) 
+(RQL). RQL can be thought as basically a set of
 nestable named operators which each have a set of arguments. RQL is designed to
 have an extremely simple, but extensible grammar that can be written in a URL friendly query string. A simple RQL
 query with a single operator that indicates a search for any resources with a property of
@@ -262,91 +262,10 @@ to the query string format. For example:
 		or(eq("foo",3),eq("foo","bar")).lt("price",10)...
 	}
 
-Values in queries can be strings (using URL encoding), numbers, booleans, null, undefined,
-and dates (in ISO UTC format without colon encoding). We can also denote arrays
-with paranthesis enclosed, comma separated values. For example to find the objects
-where foo can be the number 3, the string bar, the boolean true, or the date for the
-first day of the century we could write an array with the "in" operator:
-
-    foo=in=(3,bar,true,2000-01-01T00:00:00Z)
-
-We can also explicitly specify primitive types in queries. To explicitly specify a string "3",
-we can do:
-
-    foo=string:3
-
-Any property can be nested by using a dot syntax. To search by the bar property of
-the object in the foo property we can do:
-
-    foo.bar=3
-    
-Another common operator is sort. We can use the sort operator to sort by a specified property.
-To sort by foo in ascending order:
-	
-	price=lt=10&sort(+foo)
-
-We can also do multiple property sorts. To sort by price in ascending order and rating in descending order:
-
-    sort(+price,-rating)
-
-The aggregate function can be used for aggregation. To calculate the sum of sales for
-each department:
-
-    aggregate(departmentId,sum(sales))
-        
-Here is a definition of the common operators (individual stores may have support
-for more less operators):
-
-* sort(&lt;+|->&lt;property) - Sorts by the given property in order specified by the prefix (+ for ascending, - for descending)  
-* select(&lt;property>) - Returns an array of the given property value for each object
-* select(&lt;property>,&lt;property>,...) - Trims each object down to the set of properties defined in the arguments
-* aggregate(&lt;property|function>,...) - Aggregates the array, grouping by objects that are distinct for the provided properties, and then reduces the remaining other property values using the provided functions
-* distinct() - Returns a result set with duplicates removed 
-* in(&lt;property>,&lt;array-of-values>) - Filters for objects where the specified property's value is in the provided array
-* contains(&lt;property>,&lt;value | array-of-values>) - Filters for objects where the specified property's value is an array and the array contains the provided value or contains a value in the provided array
-* limit(count,start,maxCount) - Returns the given range of objects from the result set
-* and(&lt;query>,&lt;query>,...) - Applies all the given queries
-* or(&lt;query>,&lt;query>,...) - The union of the given queries
-* eq(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is equal to the provided value
-* lt(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is less than the provided value
-* le(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is less than or equal to the provided value
-* gt(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is greater than the provided value
-* ge(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is greater than or equal to the provided value
-* ne(&lt;property>,&lt;value>) - Filters for objects where the specified property's value is not equal to the provided value
-* sum(&lt;property?>) - Finds the sum of every value in the array or if the property argument is provided, returns the sum of the value of property for every object in the array 
-* mean(&lt;property?>) - Finds the mean of every value in the array or if the property argument is provided, returns the mean of the value of property for every object in the array 
-* max(&lt;property?>) - Finds the maximum of every value in the array or if the property argument is provided, returns the maximum of the value of property for every object in the array 
-* min(&lt;property?>) - Finds the minimum of every value in the array or if the property argument is provided, returns the minimum of the value of property for every object in the array 
-* recurse(&lt;property?>) - Recursively searches, looking in children of the object as objects in arrays in the given property value
-
-If you are writing a store, or want to introspect queries, you can use the parsed query data 
-structures. You can parse string queries with resource-query module's parseQuery function.
-Query objects have a "name" property and an "args" with an array of the arguments.
-For example:
-
-	require("perstore/resource-query").parseQuery("(foo=3|foo=bar)&price=lt=10") ->
-	{
-		name: "and",
-		args: [
-			{
-				name:"or",
-				args:[
-					{
-						name:"eq",
-						args:["foo",3]
-					},
-					{
-						name:"eq",
-						args:["foo","bar"]
-					}
-				]
-			},
-			{
-				name:"lt",
-				args:["price",10]
-			}
-		]
-	}
+For a more a complete reference guide to the RQL and the available query operators,
+see [[http://github.com/kriszyp/rql]]. This also provides information on
+the parsed query data structure which is important if you want to implement your
+own custom stores.
 				
 Licensing
 --------
