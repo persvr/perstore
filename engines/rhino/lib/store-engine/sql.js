@@ -5,7 +5,7 @@
  */
 
 
-var LazyArray = require("commonjs-utils/lazy-array").LazyArray;
+var LazyArray = require("promised-io/lazy-array").LazyArray;
 var drivers = {
 	mysql: "com.mysql.jdbc.Driver",
 	sqlite: "org.sqlite.JDBC",

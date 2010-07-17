@@ -13,6 +13,9 @@
 	"engines": {"node":">=0.1.30", "rhino": true},
 	"mappings": {
 		"tunguska": "jar:http://github.com/kriszyp/tunguska/zipball/master!/lib/",
+		"rql": "jar:http://github.com/kriszyp/rql/zipball/master!/lib/",
+		"patr": "jar:http://github.com/kriszyp/patr/zipball/master!/lib/",
+		"promised-io": "jar:http://github.com/kriszyp/promised-io/zipball/master!/lib/",
 		"commonjs-utils": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/"
 	},
 	"overlay": {
@@ -26,7 +29,13 @@
 			"mappings": {
 				"store-engine": "./engines/node/lib/store-engine/"
 			}
-		}
+		},
+		"npm": {
+			"dependencies": {
+				"commonjs-utils": "*",
+				"tunguska": "*"
+			}
+		}		
 	},
 	"githubName": "perstore",
 	"type": "zip",

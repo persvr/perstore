@@ -97,5 +97,5 @@ var modelTests = exports.CreateTests(model);
 for(var i in modelTests){
 	exports[i] = modelTests[i];
 }
-if (require.main === module.id)
-    os.exit(require("test/runner").run(exports));
+if (require.main === module)
+    require("patr/runner").run(exports);
