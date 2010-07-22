@@ -16,9 +16,18 @@ exports.SQLDatabase = function(parameters){
 		currentConnection.connect();*/ 
 		myConn = require("jar:http://github.com/Sannis/node-mysql-libmysqlclient/zipball/master!/mysql-libmysqlclient.js")
 				.createConnection(parameters.host || "localhost", parameters.username, parameters.password, parameters.name, parameters.port || 8889);
+		if(!myConn.connected()){
+			throw new Error("Connection error #" + myConn.connectErrno() + ": " + myConn.connectError());
+		}
+		
 		currentConnection = {
 			query: function(query, callback, errback){
-				callback(myConn.query(query).fetchResult());
+				var response = myConn.query(query);
+			    if(response === false) {
+					errback(new Error("Query error #" + myConn.errno() + ": " + myConn.error()));
+				}else{
+					callback(response.fetchResult());
+				}
 			}
 		}
 	}
@@ -33,7 +42,6 @@ exports.SQLDatabase = function(parameters){
 	return {
 		executeSql: function(query, parameters){
 			var deferred = defer();
-								require("sys").puts("query sent " + query);
 			query = "SELECT * FROM Customer";
 			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
 			currentConnection.query(query,function(results){
