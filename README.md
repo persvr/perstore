@@ -71,14 +71,17 @@ directly on the model, and can be overriden for specific functionality. Perstore
 follows the [class definition structure used by Persevere 1.0](http://docs.persvr.org/documentation/storage-model/json-schema)
     
 Perstore provides easy to use object persistence mechanism. Persisted model object
-instances have three default methods:
+instances have two default methods and a property:
 
 - save() - Saves any changes that have been made to an object to the data store.
 - load() - If the object has not been fully loaded (sometime queries may return partial
 object), the object will be fully loaded from the data store.
-- get(property) - Gets the value of the given property. If the property is a link relation 
-or reference, get() will resolve and load the target object. For simple properties,
-object.get("prop") and object.prop will yield the same value.
+- schema - This is a reference to the schema for this object. Schema objects are augmented
+(if it does not previously exist) with a getId method that can be used to retrieve the identity 
+of an object:
+
+    object.schema.getId(object) -> identity of object
+
 
 In the initial example, object persistence is demonstrated with the "someObject"
 variable. The object is loaded (via the get call to the model), modified, and saved
@@ -164,6 +167,11 @@ add(object, directives) - Stores a new record. This acts similar to put, but sho
 when the record does not already exist. Stores do not need to implement this 
 method, but may implement for ease of differentiating between creation of new 
 records and updates. This should return the identifier of the newly create record. 
+
+construct(object, directives) - This constructs a new persistable object. This does not
+actually store the object, but returns an object with a save() method that
+can be called to store the object when it is ready. This method does not apply to stores,
+only models and facets.
 
 subscribe(resource, callback) - Subscribes to changes in the given resource or set of 
 resources. The callback is called whenever data is changed in the monitored resource(s).
