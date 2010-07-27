@@ -4,7 +4,9 @@
  * Currently only supports Postgres
  */
 
-var defer = require("promised-io/promise").defer;
+var LazyArray = require("promised-io/lazy-array").LazyArray,
+	valueToSql = require("perstore/store/sql").valueToSql;
+	
 exports.SQLDatabase = function(parameters){
 	var connectionProvider;
 	if(parameters.type == "postgres"){
@@ -15,10 +17,25 @@ exports.SQLDatabase = function(parameters){
 			.Connection)(parameters.host || "localhost", parameters.username, parameters.password, parameters.name, parameters.port || 8889);
 		currentConnection.connect();*/ 
 		myConn = require("jar:http://github.com/Sannis/node-mysql-libmysqlclient/zipball/master!/mysql-libmysqlclient.js")
-				.createConnection(parameters.host || "localhost", parameters.username, parameters.password, parameters.name, parameters.port || 8889);
+				.createConnection(parameters.host || "localhost", parameters.username, parameters.password, parameters.name, parameters.port || 8889, "/Applications/MAMP/tmp/mysql/mysql.sock");
+		if(!myConn.connected()){
+			throw new Error("Connection error #" + myConn.connectErrno() + ": " + myConn.connectError());
+		}
+		
 		currentConnection = {
 			query: function(query, callback, errback){
-				callback(myConn.query(query).fetchResult());
+				var response = myConn.query(query);
+			    if(response === false) {
+					errback(new Error("Query error #" + myConn.errno() + ": " + myConn.error()));
+				}if(response === true){
+					callback(true);
+				}else{
+					var results = [];
+					while(object = response.fetchObject()){
+						results.push(object);
+					}
+					callback(results);
+				}
 			}
 		}
 	}
@@ -31,19 +48,17 @@ exports.SQLDatabase = function(parameters){
 	}
 	var currentConnection;
 	return {
-		executeSql: function(query, parameters){
-			var deferred = defer();
-								require("sys").puts("query sent " + query);
-			query = "SELECT * FROM Customer";
+		executeSql: function(query, parameters, callback, errback){
+			var i = 0;
+			query = query.replace(/\\?\?/g,function(param){
+				if(param == "?"){
+					return valueToSql(parameters[i++]);
+				}
+			});
 			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
 			currentConnection.query(query,function(results){
-					deferred.resolve({
-						rows: results
-					});
-				}, function(){
-					deferred.reject
-				});
-			return deferred.promise;
+				callback({rows:results});
+			}, errback);
 		},
 		transaction: function(){
 			//currentConnection = connectionProvider(parameters); 

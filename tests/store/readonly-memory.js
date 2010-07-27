@@ -1,5 +1,5 @@
 var assert = require("assert"),
-	testStore = require("store/readonly-memory").ReadonlyMemory({
+	testStore = require("store/memory").ReadOnly({
 		index: {
 			1: {id: 1, foo: 2}
 		}
