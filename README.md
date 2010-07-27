@@ -71,14 +71,17 @@ directly on the model, and can be overriden for specific functionality. Perstore
 follows the [class definition structure used by Persevere 1.0](http://docs.persvr.org/documentation/storage-model/json-schema)
     
 Perstore provides easy to use object persistence mechanism. Persisted model object
-instances have three default methods:
+instances have two default methods and a property:
 
 - save() - Saves any changes that have been made to an object to the data store.
 - load() - If the object has not been fully loaded (sometime queries may return partial
 object), the object will be fully loaded from the data store.
-- get(property) - Gets the value of the given property. If the property is a link relation 
-or reference, get() will resolve and load the target object. For simple properties,
-object.get("prop") and object.prop will yield the same value.
+- schema - This is a reference to the schema for this object. Schema objects are augmented
+(if it does not previously exist) with a getId method that can be used to retrieve the identity 
+of an object:
+
+    object.schema.getId(object) -> identity of object
+
 
 In the initial example, object persistence is demonstrated with the "someObject"
 variable. The object is loaded (via the get call to the model), modified, and saved
@@ -128,18 +131,18 @@ the actual return value if they require asynchronous processing to complete the
 operation. They are roughly listed in order of importance 
 (get(id) is the most important function):
 
-get(id) - Finds the persisted record with the given identifier from the store and returns 
+get(id, directives) - Finds the persisted record with the given identifier from the store and returns 
 an object representation (should always be a new object).
 
-put(object, id) - Stores the given object in storage. The record may or may not 
+put(object, directives) - Stores the given object in storage. The record may or may not 
 already exist. The optional second parameter 
 defines the primary identifier for storing the object. If the second parameter is omitted, the
 key may be specified the primary identifier property. If that is not specified, the key may be
 auto-generated. The primary identifer for the object should be returned
 
-delete(id) - Deletes the record with the given identifier from the store.
+delete(id, directives) - Deletes the record with the given identifier from the store.
 
-query(queryString, options) - This executes a query against the data store. The 
+query(queryString, directives) - This executes a query against the data store. The 
 queryString parameter defines the actual query, and the options parameter should be
 an object that provides extra information. The following properties on the options
 object may be included:
@@ -160,19 +163,36 @@ More extensive query syntax can be based on the
 encouraged to utilize the resource-query module in perstore for parsing queries into
 a query AST-style structured object for ease of use. 
 
-create(object) - Stores a new record. This acts similar to put, but should only be called
+add(object, directives) - Stores a new record. This acts similar to put, but should only be called
 when the record does not already exist. Stores do not need to implement this 
 method, but may implement for ease of differentiating between creation of new 
 records and updates. This should return the identifier of the newly create record. 
 
+construct(object, directives) - This constructs a new persistable object. This does not
+actually store the object, but returns an object with a save() method that
+can be called to store the object when it is ready. This method does not apply to stores,
+only models and facets.
+
 subscribe(resource, callback) - Subscribes to changes in the given resource or set of 
 resources. The callback is called whenever data is changed in the monitored resource(s).
 
-transaction() - If it exists, this is called when a transaction is started. This should return
-a transaction object with the following two functions:
+transaction() - Starts a new transaction for the store. This should return
+a transaction object with the following functions. Each of these functions are optional
+and only called if they exist:
 
 - commit() - This is called when a transaction is committed.
+- requestCommit() - This is called on all the databases/stores prior to committing the
+transaction. If this succeeds (doesn't throw an error), the store should guarantee the
+success of a subsequent commit() operation. This provides two phase commit 
+semantics. 
 - abort() - This is called when a transaction is aborted.
+- suspend() - This is called when a transaction is suspended. This happens when an 
+event is finished, but a promise for the continuance of the action is still in progress. 
+After being suspended, this transaction is no longer the active transaction.
+- resume() - This is called when a transaction is resumed. This happens when a promise
+resumes the execution of an action.
+
+(See Transactions section below for more information)
 
 Perstore is designed to allow easy construction of new data stores. A data store 
 in Perstore is a JavaScript object with any or all of the functions defined above.
@@ -266,7 +286,72 @@ For a more a complete reference guide to the RQL and the available query operato
 see [[http://github.com/kriszyp/rql]]. This also provides information on
 the parsed query data structure which is important if you want to implement your
 own custom stores.
-				
+
+Transactions
+==========
+
+Transactions provide a means for committing multiple changes to a database 
+satomically. The store API includes transaction semantics for communicating transactions
+to the underlying databases. Perstore provides transactional management for delegating
+transaction operations to the appropriate stores and databases. To start a transaction,
+call the transaction function on the stores module with a callback that will perform any
+of the actions of the transaction:
+
+    require("perstore/stores").transaction(function(){
+    	Model.put(...);
+    	Model.delete(...);
+    });
+ 
+The callback function may return a promise if the transaction will involve actions that
+extend beyond the duration of the function call. When the promise is resolved the 
+transaction will be committed (or if the promise errors out, the transaction will be 
+aborted).
+
+Perstore includes a JSGI middleware component for wrapping requests in transactions.
+This will make the life of the request be one transaction, committed when the response
+is ready to send (or aborted for an error).
+
+Implementing Transactions
+------------------------
+
+If you are writing your store that needs to be transaction aware, there are two 
+different options for implementing transaction handling. The simplest approach is to
+implement the implement the transaction method on your store and then use the
+AutoTransaction store wrapper provided by the "stores" module:
+
+    var AutoTransaction = require("perstore/stores").AutoTransaction;
+    myTransactionalStore = AutoTransaction({
+        transaction: function(){
+            // prepare the transaction
+            return {
+                commit: function{
+                   // commit the transaction
+                },
+                // implement the rest of the handlers
+                abort:...
+            }
+        }
+    });
+
+The AutoTransaction wrappers provides two important functions. First, if any of your
+store methods are called outside of a global transaction, a transaction will automatically
+be started before calling the method and committed afterwards. Second, if a global
+transaction is in process, the transaction method will be called on the first access of
+this store and be committed when the global transaction is committed.
+
+The other approach to transaction handling is to provide a "database" object. This can
+be useful for situations where transaction management needs to exist outside of 
+individual stores (and may cross stores). One can implement a "database" object that
+provides the transaction method with the same API as the store's transaction method.
+The database object can be registered with:
+
+    require("perstore/stores").registerDatabase(transaction: function(){
+        // prepare the transaction
+        return {...}
+    });
+    
+This transaction method will be called whenever a global transaction is started.
+ 
 Licensing
 --------
 
