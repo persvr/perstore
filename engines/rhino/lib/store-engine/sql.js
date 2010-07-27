@@ -22,14 +22,18 @@ exports.SQLDatabase = function(parameters){
 	}
 	adapter.initParameters(parameters);
 	return {
-		executeSql: function(query, parameters){
+		executeSql: function(query, parameters, callback, errback){
 			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
-			var rawResults = adapter.executeSql(query, parameters);
-			var results = {rows:LazyArray(rawResults)};
-			if(rawResults.insertId){
-				results.insertId = rawResults.insertId; 
+			try{
+				var rawResults = adapter.executeSql(query, parameters);
+				var results = {rows:LazyArray(rawResults)};
+				if(rawResults.insertId){
+					results.insertId = rawResults.insertId; 
+				}
+			}catch(e){
+				return errback(e);
 			}
-			return results;
+			callback(results);
 		},
 		transaction: function(){
 			adapter.startTransaction();

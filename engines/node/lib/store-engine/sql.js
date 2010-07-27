@@ -4,9 +4,8 @@
  * Currently only supports Postgres
  */
 
-var defer = require("promised-io/promise").defer,
-	LazyArray = require("promised-io/lazy-array").LazyArray,
-	valueToSQL = require("perstore/store/sql").valueToSQL;
+var LazyArray = require("promised-io/lazy-array").LazyArray,
+	valueToSql = require("perstore/store/sql").valueToSql;
 	
 exports.SQLDatabase = function(parameters){
 	var connectionProvider;
@@ -25,24 +24,17 @@ exports.SQLDatabase = function(parameters){
 		
 		currentConnection = {
 			query: function(query, callback, errback){
-		require("sys").puts("query" + query);
 				var response = myConn.query(query);
-		require("sys").puts("response" + response);
 			    if(response === false) {
 					errback(new Error("Query error #" + myConn.errno() + ": " + myConn.error()));
 				}if(response === true){
 					callback(true);
 				}else{
-					callback(LazyArray({
-						some: function(callback){
-							var object;
-							while(object = response.fetchObject()){
-								if(callback(object)){
-									break;
-								}
-							}
-						}
-					}));
+					var results = [];
+					while(object = response.fetchObject()){
+						results.push(object);
+					}
+					callback(results);
 				}
 			}
 		}
@@ -56,22 +48,17 @@ exports.SQLDatabase = function(parameters){
 	}
 	var currentConnection;
 	return {
-		executeSql: function(query, parameters){
+		executeSql: function(query, parameters, callback, errback){
 			var i = 0;
 			query = query.replace(/\\?\?/g,function(param){
 				if(param == "?"){
-					return valueToSQL(parameters[i++]);
+					return valueToSql(parameters[i++]);
 				}
 			});
-			var deferred = defer();
 			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
 			currentConnection.query(query,function(results){
-					deferred.resolve({
-						rows: results
-					});
-				}, deferred.reject
-				);
-			return deferred.promise;
+				callback({rows:results});
+			}, errback);
 		},
 		transaction: function(){
 			//currentConnection = connectionProvider(parameters); 
