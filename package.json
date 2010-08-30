@@ -37,6 +37,7 @@
 			}
 		}		
 	},
+	"usesSystemModules": ["path"],
 	"githubName": "perstore",
 	"type": "zip",
 	"location": "http://github.com/kriszyp/perstore/zipball/master",
