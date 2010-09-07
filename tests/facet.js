@@ -1,6 +1,6 @@
 var assert = require("assert"),
 	model = require("./model").model,
-	CreateTests = require("./model").CreateTests;
+	CreateTests = require("./model").CreateTests,
 	Restrictive = require("facet").Restrictive,
 	Permissive = require("facet").Permissive;
 
