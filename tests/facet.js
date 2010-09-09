@@ -22,8 +22,6 @@ var restrictiveTests = CreateTests(restrictiveFacet);
 
 exports.testGetRestrictive = restrictiveTests.testGet;
 exports.testLoadRestrictive = restrictiveTests.testLoad;
-exports.testGetPropertyRestrictive = restrictiveTests.testGetProperty;
-exports.testLinkRestrictive = restrictiveTests.testLink;
 exports.testSaveRestrictive = shouldFail(restrictiveTests.testSave);
 exports.testMethodRestrictive = shouldFail(restrictiveTests.testMethod);
 exports.testStaticMethodRestrictive = shouldFail(restrictiveTests.testStaticMethod);
