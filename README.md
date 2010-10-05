@@ -1,5 +1,5 @@
 Perstore is a cross-platform JavaScript object store interface for mapping persistent 
-objects to various different storage mediums using W3C's object store API. Perstore
+objects to various different storage mediums using W3C's [IndexedDB object store API](http://www.w3.org/TR/IndexedDB/#object-store-sync). Perstore
 includes JavaScript object-relational mapping for SQL databases, JSON file storage,
 and hopefully support for many other object/document style storage systems that
 provide more direct object storage. Perstore provides model classes that wrap data
