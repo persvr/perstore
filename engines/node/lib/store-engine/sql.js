@@ -24,18 +24,19 @@ exports.SQLDatabase = function(parameters){
 		
 		currentConnection = {
 			query: function(query, callback, errback){
-				var response = myConn.query(query);
-			    if(response === false) {
-					errback(new Error("Query error #" + myConn.errno() + ": " + myConn.error()));
-				}if(response === true){
-					callback(true);
-				}else{
-					var results = [];
-					while(object = response.fetchObject()){
-						results.push(object);
+				myConn.queryAsync(query, function(response){
+				    if(response === false) {
+						errback(new Error("Query error #" + myConn.errno() + ": " + myConn.error()));
+					}if(response === true){
+						callback(true);
+					}else{
+						var results = [];
+						while(object = response.fetchObject()){
+							results.push(object);
+						}
+						callback(results);
 					}
-					callback(results);
-				}
+				});
 			}
 		}
 	}

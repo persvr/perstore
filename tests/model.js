@@ -1,6 +1,6 @@
 var assert = require("assert"),
 	store = require("stores").DefaultStore("TestStore"),
-	model = require("model").Model("TestStore", store, {
+	model = require("model").Model(store, {
 		prototype: {		
 			testMethod: function(){
 				return this.foo;
@@ -25,18 +25,12 @@ var assert = require("assert"),
 			}
 		]
 	});
-
+model.setPath("TestStore");
 exports.model = model;
 exports.CreateTests = function(model){
 	return {
 		testGet: function(){
 			assert.equal(model.get(1).foo, 2);
-		},
-
-		testLoad: function(){
-			var object = model.get(1);
-			object = object.load();
-			assert.equal(object.foo, 2);
 		},
 
 		testQuery: function(){
@@ -55,17 +49,6 @@ exports.CreateTests = function(model){
 			object.save();
 			object = model.get(1);
 			assert.equal(object.rand, newRand);
-		},
-
-		testGetProperty: function(){
-			var bar = model.get(2).get("bar");
-			assert.equal(bar, "hi");
-		},
-
-		testLink: function(){
-			var fooTarget = model.get(1).get("foo");
-			assert.equal(fooTarget.id, 2);
-			assert.equal(fooTarget.bar, "hi");
 		},
 
 		testSchemaEnforcement: function(){

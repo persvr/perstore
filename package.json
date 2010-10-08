@@ -12,11 +12,12 @@
 	],
 	"engines": {"node":">=0.1.30", "rhino": true},
 	"mappings": {
-		"tunguska": "jar:http://github.com/kriszyp/tunguska/zipball/master!/lib/",
-		"rql": "jar:http://github.com/kriszyp/rql/zipball/master!/lib/",
-		"patr": "jar:http://github.com/kriszyp/patr/zipball/master!/lib/",
-		"promised-io": "jar:http://github.com/kriszyp/promised-io/zipball/master!/lib/",
-		"commonjs-utils": "jar:http://github.com/kriszyp/commonjs-utils/zipball/master!/lib/"
+		"tunguska": "http://github.com/kriszyp/tunguska/zipball/v0.2.1",
+		"rql": "http://github.com/kriszyp/rql/zipball/v0.2.1",
+		"patr": "http://github.com/kriszyp/patr/zipball/v0.2.1",
+		"promised-io": "http://github.com/kriszyp/promised-io/zipball/v0.2.1",
+		"commonjs-utils": "http://github.com/kriszyp/commonjs-utils/zipball/v0.2.1",
+		"mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/master!/lib/mongodb/"
 	},
 	"overlay": {
 		"narwhal": {
@@ -37,6 +38,7 @@
 			}
 		}		
 	},
+	"usesSystemModules": ["path"],
 	"githubName": "perstore",
 	"type": "zip",
 	"location": "http://github.com/kriszyp/perstore/zipball/master",

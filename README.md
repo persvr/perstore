@@ -1,5 +1,5 @@
 Perstore is a cross-platform JavaScript object store interface for mapping persistent 
-objects to various different storage mediums using W3C's object store API. Perstore
+objects to various different storage mediums using W3C's [IndexedDB object store API](http://www.w3.org/TR/IndexedDB/#object-store-sync). Perstore
 includes JavaScript object-relational mapping for SQL databases, JSON file storage,
 and hopefully support for many other object/document style storage systems that
 provide more direct object storage. Perstore provides model classes that wrap data
@@ -291,13 +291,13 @@ Transactions
 ==========
 
 Transactions provide a means for committing multiple changes to a database 
-satomically. The store API includes transaction semantics for communicating transactions
+atomically. The store API includes transaction semantics for communicating transactions
 to the underlying databases. Perstore provides transactional management for delegating
 transaction operations to the appropriate stores and databases. To start a transaction,
 call the transaction function on the stores module with a callback that will perform any
 of the actions of the transaction:
 
-    require("perstore/stores").transaction(function(){
+    require("perstore/transaction").transaction(function(){
     	Model.put(...);
     	Model.delete(...);
     });
@@ -319,7 +319,7 @@ different options for implementing transaction handling. The simplest approach i
 implement the implement the transaction method on your store and then use the
 AutoTransaction store wrapper provided by the "stores" module:
 
-    var AutoTransaction = require("perstore/stores").AutoTransaction;
+    var AutoTransaction = require("perstore/transaction").AutoTransaction;
     myTransactionalStore = AutoTransaction({
         transaction: function(){
             // prepare the transaction
@@ -345,7 +345,7 @@ individual stores (and may cross stores). One can implement a "database" object 
 provides the transaction method with the same API as the store's transaction method.
 The database object can be registered with:
 
-    require("perstore/stores").registerDatabase(transaction: function(){
+    require("perstore/transaction").registerDatabase(transaction: function(){
         // prepare the transaction
         return {...}
     });
