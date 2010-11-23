@@ -1,46 +1,62 @@
 {
-	"name": "perstore",
-	"author": "Kris Zyp",
-	"email": "kriszyp@gmail.com",
-	"dependencies": ["narwhal", "commonjs-utils"],
-	"contributors": ["Vladimir Dronnikov <dronnikov@gmail.com>"],
-	"keywords": [
-		"persistence",
-		"object",
-		"store",
-		"persevere"
-	],
-	"engines": {"node":">=0.1.30", "rhino": true},
-	"mappings": {
-		"tunguska": "http://github.com/kriszyp/tunguska/zipball/v0.2.1",
-		"rql": "http://github.com/kriszyp/rql/zipball/v0.2.1",
-		"patr": "http://github.com/kriszyp/patr/zipball/v0.2.1",
-		"promised-io": "http://github.com/kriszyp/promised-io/zipball/v0.2.1",
-		"commonjs-utils": "http://github.com/kriszyp/commonjs-utils/zipball/v0.2.1",
-		"mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/master!/lib/mongodb/"
-	},
-	"overlay": {
-		"narwhal": {
-			"mappings": {
-				"fs-promise": "./engines/rhino/lib/fs-promise",
-				"store-engine": "./engines/rhino/lib/store-engine/"
-			}
-		},
-		"node": {
-			"mappings": {
-				"store-engine": "./engines/node/lib/store-engine/"
-			}
-		},
-		"npm": {
-			"dependencies": {
-				"commonjs-utils": "*",
-				"tunguska": "*"
-			}
-		}		
-	},
-	"usesSystemModules": ["path"],
-	"githubName": "perstore",
-	"type": "zip",
-	"location": "http://github.com/kriszyp/perstore/zipball/master",
-	"license":"AFL/BSD"
+  "name": "perstore",
+  "version": "0.2.3",
+  "author": "Kris Zyp",
+  "email": "kriszyp@gmail.com",
+  "dependencies": ["narwhal", "commonjs-utils"],
+  "contributors": ["Vladimir Dronnikov <dronnikov@gmail.com>"],
+  "keywords": [
+    "persistence",
+    "object",
+    "store",
+    "persevere"
+  ],
+  "engines": {"node":">=0.1.30", "rhino": true},
+  "mappings": {
+    "tunguska": "http://github.com/kriszyp/tunguska/zipball/v0.2.2",
+    "rql": "http://github.com/kriszyp/rql/zipball/v0.2.2",
+    "patr": "http://github.com/kriszyp/patr/zipball/v0.2.2",
+    "promised-io": "http://github.com/kriszyp/promised-io/zipball/v0.2.2",
+    "commonjs-utils": "http://github.com/kriszyp/commonjs-utils/zipball/v0.2.2",
+    "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/master!/lib/mongodb/"
+  },
+  "overlay": {
+    "narwhal": {
+      "mappings": {
+        "fs-promise": "./engines/rhino/lib/fs-promise",
+        "store-engine": "./engines/rhino/lib/store-engine/"
+      }
+    },
+    "node": {
+      "mappings": {
+        "store-engine": "./engines/node/lib/store-engine/"
+      }
+    }   
+  },
+  "usesSystemModules": ["path"],
+  "licenses": [
+     {
+         "type": "AFLv2.1",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
+     },
+     {
+         "type": "BSD",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
+     }
+  ],
+  "repository": {
+    "type":"git",
+    "url":"http://github.com/kriszyp/tunguska"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies":{
+    "tunguska": ">=0.2.2",
+    "rql": ">=0.2.2",
+    "patr": ">=0.2.2",
+    "promised-io": ">=0.2.2",
+    "commonjs-utils": ">=0.2.2",
+    "mongodb": "*"
+  }
 }
