@@ -16,7 +16,7 @@ loader like [Nodules](http://github.com/kriszyp/nodules) by using a mapping in y
 package.json:
 
     "mappings": {
-	  "perstore": "jar:http://github.com/kriszyp/perstore/zipball/master!/lib/"
+	  "perstore": "http://github.com/kriszyp/perstore/zipball/master"
     }
 
 And you need a local.json file in your current working directory for your application that
@@ -104,6 +104,8 @@ allows read access and creation of new objects:
 Models wrap data stores, which provide the low level interaction with the database or 
 storage system. Perstore comes with several data stores including (in the store directory):
 
+- mongodb - This is object store that uses a MongoDB database for storage.
+- redis - This is object store that uses a Redis database for storage.
 - sql - An SQL-based object store. This stores and retrieves objects as rows in 
 databases. Currently this only fully implemented in Rhino, but the sql data store can easily
 wrap an SQL database provider that simple provides an W3C SQL database style
@@ -152,16 +154,8 @@ object may be included:
 - parameters - An array of values for parameterized queries
 
 The function should generally return an array representing the result set of the query 
-(unless the query creates a single aggregate object or value). While there is no 
-normative definition of the query language, the query method SHOULD support URL 
-encoded queries like:
-
-    foo=value&bar=2
-
-More extensive query syntax can be based on the 
-[discussions here](http://groups.google.com/group/json-query). Implementors are
-encouraged to utilize the resource-query module in perstore for parsing queries into
-a query AST-style structured object for ease of use. 
+(unless the query creates a single aggregate object or value). Perstore is designed to leverage [http://github.com/kriszyp/rql](resource query language)
+for querying, and included stores use RQL, although stores can utilize alternate query languages. 
 
 add(object, directives) - Stores a new record. This acts similar to put, but should only be called
 when the record does not already exist. Stores do not need to implement this 
@@ -310,6 +304,8 @@ aborted).
 Perstore includes a JSGI middleware component for wrapping requests in transactions.
 This will make the life of the request be one transaction, committed when the response
 is ready to send (or aborted for an error).
+
+    transactionApp = require("perstore/jsgi/transactional").Transactional(nextApp);
 
 Implementing Transactions
 ------------------------
