@@ -1,4 +1,3 @@
-exports.testJSFile = require("./js-file");
 exports.testReadonlyMemory = require("./readonly-memory");
 exports.testInherited = require("./inherited");
 exports.testInherited = require("./cache");
