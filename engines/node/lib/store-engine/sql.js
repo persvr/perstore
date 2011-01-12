@@ -1,79 +1,84 @@
 /**
  * This is an SQL database engine for Node
  * based on http://www.w3.org/TR/webdatabase/
- * Currently only supports Postgres
+ * Currently only supports MySQL.
  */
 
-var LazyArray = require("promised-io/lazy-array").LazyArray,
-	valueToSql = require("perstore/store/sql").valueToSql;
-	
-exports.SQLDatabase = function(parameters){
-	var connectionProvider;
-	if(parameters.type == "postgres"){
-		currentConnection = require("postgres").createConnection; 
-	}
-	else if(parameters.type == "mysql"){
-/*		currentConnection = new (require("jar:http://github.com/masuidrive/node-mysql/zipball/master!/lib/mysql.js")
-			.Connection)(parameters.host || "localhost", parameters.username, parameters.password, parameters.name, parameters.port || 8889);
-		currentConnection.connect();*/ 
-		myConn = require("jar:http://github.com/Sannis/node-mysql-libmysqlclient/zipball/master!/mysql-libmysqlclient.js")
-				.createConnection(parameters.host || "localhost", parameters.username, parameters.password, parameters.name, parameters.port || 8889, "/Applications/MAMP/tmp/mysql/mysql.sock");
-		if(!myConn.connected()){
-			throw new Error("Connection error #" + myConn.connectErrno() + ": " + myConn.connectError());
-		}
-		
-		currentConnection = {
-			query: function(query, callback, errback){
-				myConn.queryAsync(query, function(response){
-				    if(response === false) {
-						errback(new Error("Query error #" + myConn.errno() + ": " + myConn.error()));
-					}if(response === true){
-						callback(true);
-					}else{
-						var results = [];
-						while(object = response.fetchObject()){
-							results.push(object);
-						}
-						callback(results);
-					}
-				});
-			}
-		}
-	}
-	else if(parameters.type == "sqlite"){
-		currentConnection = new (require("jar:http://github.com/orlandov/node-sqlite/zipball/master!/lib/sqlite.js")
-			.Connection)(parameters.host, parameters.name, parameters.username, parameters.password); 
-	}
-	else{
-		throw new Error("Unsupported database engine");
-	}
-	var currentConnection;
+var DatabaseError = require('perstore/errors').DatabaseError;
+
+var engines = {
+	mysql: MysqlWrapper
+};
+
+exports.SQLDatabase = function(params) {
+	if (params.type in engines)
+		return engines[params.type](params);
+	throw new DatabaseError("Unsupported database engine");
+};
+
+function MysqlWrapper(params) {
+	var conn;
+
+	// adapted from http://github.com/sidorares/nodejs-mysql-native/lib/mysql-native/websql.js
 	return {
-		executeSql: function(query, parameters, callback, errback){
-			var i = 0;
-			query = query.replace(/\\?\?/g,function(param){
-				if(param == "?"){
-					return valueToSql(parameters[i++]);
+		executeSql: function(query, args, callback, errback) {
+			if (!conn.clean) {
+				errback(new DatabaseError("Cannot commit a transaction with an error"));
+				return;
+			}
+			var cmd = conn.query(query, args),
+				results = { rows: [] };
+
+			cmd.on('row', function(r) {
+				results.rows.push(r);
+			});
+			cmd.on('end', function() {
+				if (conn.clean && callback) {
+					results.insertId = cmd.insert_id;
+					results.rowsAffected = cmd.affected_rows;
+					callback(results);
 				}
 			});
-			// should roughly follow executeSql in http://www.w3.org/TR/webdatabase/
-			currentConnection.query(query,function(results){
-				callback({rows:results});
-			}, errback);
+			cmd.on('error', function(err) {
+				conn.clean = false;
+				if (errback)
+					errback(err);
+			});
 		},
-		transaction: function(){
-			//currentConnection = connectionProvider(parameters); 
+		transaction: function() {
+			conn = connectMysql(params);
+			throwOnError(conn.query('SET autocommit=0;'), 'disable autocommit');
+			throwOnError(conn.query('BEGIN'), 'initialize transaction');
+
 			return {
-				commit: function(){
-					/*currentConnection.query("COMMIT");
-					currentConnection.close();*/
+				commit: function() {
+					throwOnError(conn.query("COMMIT"), 'commit SQL transaction');
+					throwOnError(conn.close(), 'close connection');
 				},
-				abort: function(){
-					/*currentConnection.query("ABORT");
-					currentConnection.close();*/
+				abort: function() {
+					throwOnError(conn.query("ROLLBACK"), 'rollback SQL transaction');
+					throwOnError(conn.close(), 'close connection');
 				}
 			};
 		}
-	};	
-}
+	};
 
+	function throwOnError(cmd, action) {
+		cmd.on('error', function(err) {
+			throw new DatabaseError('Failed to ' + action +
+				(err && err.message ? ': ' + err.message : ''));
+		});
+	}
+
+	function connectMysql(params) {
+		var ret = require("mysql-native/client").createTCPClient(params.host, params.port);
+		ret.auto_prepare = true;
+		ret.row_as_hash = true;
+		ret.clean = true;
+
+		throwOnError(ret.connection, 'connect to DB');
+		throwOnError(ret.auth(params.name, params.user, params.pass), 'authenticate');
+
+		return ret;
+	}
+}
