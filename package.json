@@ -18,6 +18,7 @@
     "patr": "http://github.com/kriszyp/patr/zipball/v0.2.2",
     "promised-io": "http://github.com/kriszyp/promised-io/zipball/v0.2.2",
     "commonjs-utils": "http://github.com/kriszyp/commonjs-utils/zipball/v0.2.2",
+    "mysql-native": "jar:http://github.com/sidorares/nodejs-mysql-native/zipball/master!/lib/mysql-native/",
     "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/master!/lib/mongodb/"
   },
   "overlay": {
