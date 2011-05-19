@@ -32,7 +32,7 @@ function MysqlWrapper(params) {
 			cmd.on('row', function(r) {
 				results.rows.push(r);
 			});
-			cmd.on('end', function() {
+			cmd.on('result', function() {
 				if (conn.clean && callback) {
 					results.insertId = cmd.insert_id;
 					results.rowsAffected = cmd.affected_rows;
