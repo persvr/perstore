@@ -26,7 +26,7 @@ function MysqlWrapper(params) {
 				errback(new DatabaseError("Cannot commit a transaction with an error"));
 				return;
 			}
-			var cmd = conn.query(query, args),
+			var cmd = conn.execute(query, args),
 				results = { rows: [] };
 
 			cmd.on('row', function(r) {
