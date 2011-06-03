@@ -56,11 +56,9 @@ function MysqlWrapper(params) {
             currentConnection = conn;
 			throwOnError(conn.query('SET autocommit=0;'), 'disable autocommit');
 			throwOnError(conn.query('BEGIN'), 'initialize transaction');
-            //console.log("start txn");
 
 			return {
 				commit: function() {
-                    //console.log("commit txn");
 					throwOnError(conn.query("COMMIT"), 'commit SQL transaction');
 					throwOnError(conn.close(), 'close connection');
 				},
@@ -69,11 +67,9 @@ function MysqlWrapper(params) {
 					throwOnError(conn.close(), 'close connection');
 				},
                 suspend: function(){
-                    //console.log("suspend");
                     currentConnection = null;
                 },
                 resume: function(){
-                    //console.log("resume");
                     currentConnection = conn;
                 }
 			};
@@ -88,7 +84,6 @@ function MysqlWrapper(params) {
 	}
 
 	function connectMysql(params) {
-        //console.log("connecting to mysql");
 		var ret = require("mysql-native/client").createTCPClient(params.host, params.port);
 		ret.auto_prepare = true;
 		ret.row_as_hash = true;
