@@ -17,22 +17,28 @@ exports.SQLDatabase = function(params) {
 };
 
 function MysqlWrapper(params) {
-	var conn;
+	var currentConnection;
+    var x=0;
 
 	// adapted from http://github.com/sidorares/nodejs-mysql-native/lib/mysql-native/websql.js
 	return {
 		executeSql: function(query, args, callback, errback) {
+            var conn = currentConnection;
+            if(!conn) {
+                errback(new DatabaseError("No transactional context has been created"));
+                return;
+            }
 			if (!conn.clean) {
 				errback(new DatabaseError("Cannot commit a transaction with an error"));
 				return;
 			}
-			var cmd = conn.query(query, args),
+			var cmd = conn.execute(query, args),
 				results = { rows: [] };
 
 			cmd.on('row', function(r) {
 				results.rows.push(r);
 			});
-			cmd.on('end', function() {
+			cmd.on('result', function() {
 				if (conn.clean && callback) {
 					results.insertId = cmd.insert_id;
 					results.rowsAffected = cmd.affected_rows;
@@ -46,7 +52,8 @@ function MysqlWrapper(params) {
 			});
 		},
 		transaction: function() {
-			conn = connectMysql(params);
+			var conn = connectMysql(params);
+            currentConnection = conn;
 			throwOnError(conn.query('SET autocommit=0;'), 'disable autocommit');
 			throwOnError(conn.query('BEGIN'), 'initialize transaction');
 
@@ -58,7 +65,13 @@ function MysqlWrapper(params) {
 				abort: function() {
 					throwOnError(conn.query("ROLLBACK"), 'rollback SQL transaction');
 					throwOnError(conn.close(), 'close connection');
-				}
+				},
+                suspend: function(){
+                    currentConnection = null;
+                },
+                resume: function(){
+                    currentConnection = conn;
+                }
 			};
 		}
 	};
