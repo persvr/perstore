@@ -1,9 +1,8 @@
 {
   "name": "perstore",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "Kris Zyp",
   "email": "kriszyp@gmail.com",
-  "dependencies": ["narwhal", "commonjs-utils"],
   "contributors": ["Vladimir Dronnikov <dronnikov@gmail.com>"],
   "keywords": [
     "persistence",
