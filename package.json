@@ -3,7 +3,6 @@
   "version": "0.2.3",
   "author": "Kris Zyp",
   "email": "kriszyp@gmail.com",
-  "dependencies": ["narwhal", "commonjs-utils"],
   "contributors": ["Vladimir Dronnikov <dronnikov@gmail.com>"],
   "keywords": [
     "persistence",
@@ -14,12 +13,12 @@
   "engines": {"node":">=0.1.30", "rhino": true},
   "mappings": {
     "tunguska": "http://github.com/kriszyp/tunguska/zipball/v0.2.2",
-    "rql": "http://github.com/kriszyp/rql/zipball/v0.2.2",
-    "patr": "http://github.com/kriszyp/patr/zipball/v0.2.2",
-    "promised-io": "http://github.com/kriszyp/promised-io/zipball/v0.2.2",
+    "rql": "jar:http://github.com/kriszyp/rql/zipball/v0.2.2!/",
+    "patr": "jar:http://github.com/kriszyp/patr/zipball/v0.2.2!/",
+    "promised-io": "jar:http://github.com/kriszyp/promised-io/zipball/v0.2.2!/",
     "commonjs-utils": "http://github.com/kriszyp/commonjs-utils/zipball/v0.2.2",
     "mysql-native": "jar:http://github.com/sidorares/nodejs-mysql-native/zipball/master!/lib/mysql-native/",
-    "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/master!/lib/mongodb/"
+    "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/V0.9.4.4!/lib/mongodb/"
   },
   "overlay": {
     "narwhal": {

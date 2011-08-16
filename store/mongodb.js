@@ -12,9 +12,10 @@
 //
 
 var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFunction,
+	Connection = require("mongodb/connection").Connection,
 	mongo = require('mongodb/db'),
 	BSON = require('mongodb/bson/bson'),
-	Server = require("mongodb/connection").Server,
+	Server = require("mongodb/connections/server").Server,
 	sys = require('util'),
 	defer = require("promised-io/promise").defer,
 	when = require("promised-io/promise").when,
@@ -213,7 +214,8 @@ exports.MongoDB = function(options){
 		});
 	}
 	else {
-		var database = options.database || new mongo.Db(dbOptions.name, new Server(dbOptions.host, dbOptions.port, {}), {});
+		var database = options.database || new mongo.Db(dbOptions.name, 
+				new Server(dbOptions.host, dbOptions.port, {}), {});
 		database.open(function(err, db){
 			if(err){
 				sys.puts("Failed to load mongo database " + dbOptions.name + " error " + err.message);
