@@ -1,2 +1,2 @@
-var testStore = require("store/memory").Memory();
+var testStore = require("../../../store/memory").Memory();
 require("./base").testStore(testStore);

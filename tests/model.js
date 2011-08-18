@@ -1,6 +1,6 @@
 var assert = require("assert"),
-	store = require("stores").DefaultStore("TestStore"),
-	model = require("model").Model(store, {
+	store = require("../stores").DefaultStore("TestStore"),
+	model = require("../model").Model(store, {
 		prototype: {		
 			testMethod: function(){
 				return this.foo;

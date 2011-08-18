@@ -1,8 +1,8 @@
 var assert = require("assert"),
 	model = require("./model").model,
 	CreateTests = require("./model").CreateTests,
-	Restrictive = require("facet").Restrictive,
-	Permissive = require("facet").Permissive;
+	Restrictive = require("../facet").Restrictive,
+	Permissive = require("../facet").Permissive;
 
 var permissiveFacet = Permissive(model, {
 	extraStaticMethod: function(){

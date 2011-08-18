@@ -1,4 +1,4 @@
-var testStore = require("store/js-file").JSFile("data/TestStore"),
+var testStore = require("../../store/js-file").JSFile("data/TestStore"),
 	CreateQueryTests = require("../query").CreateQueryTests;
 
 var tests = CreateQueryTests(testStore);

@@ -24,14 +24,14 @@ exports.Package = function(name, store, schema, options){
         schema.SubModel = function(name, subStore, subSchema) {
             subSchema = subSchema || {};
             subSchema.parentStore = model;
-            return entityStores[name] = require("model").SubModel(name, subStore, subSchema);
+            return entityStores[name] = require("./model").SubModel(name, subStore, subSchema);
         };
     }
     if (!options.nested) {
-        var model = require("model").Model(name, store, schema);
+        var model = require("./model").Model(name, store, schema);
     }
     else {
-        var model = require("model").SubModel(name, store, schema);
+        var model = require("./model").SubModel(name, store, schema);
     }
     return model;
 };
