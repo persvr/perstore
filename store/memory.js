@@ -120,7 +120,9 @@ var Memory = exports.Memory = function(options){
 	store.indexes = {};
 	store.setIndex = function(index){
 		if(index instanceof Array){
-			log.push.apply(log, index);
+			if(log){
+				log.push.apply(log, index);
+			}
 			index.forEach(function(object){
 				if("__deleted__" in object){
 					delete store.index[object.__deleted__];
