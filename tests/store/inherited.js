@@ -1,10 +1,10 @@
 var assert = require("assert"),
-	baseStore = require("store/memory").Memory(),
+	baseStore = require("../../store/memory").Memory(),
 	superSchema = {id:"A"},
-	superStore = require("store/inherited").Inherited(baseStore),
-	subStore = require("store/inherited").Inherited(baseStore),
-	superModel = require("model").Model(superStore,superSchema),
-	subModel = require("model").Model(subStore, {id:"B","extends": superSchema});
+	superStore = require("../../store/inherited").Inherited(baseStore),
+	subStore = require("../../store/inherited").Inherited(baseStore),
+	superModel = require("../../model").Model(superStore,superSchema),
+	subModel = require("../../model").Model(subStore, {id:"B","extends": superSchema});
 	
 
 superStore.put({name:"Instance of super store"});

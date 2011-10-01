@@ -1,7 +1,7 @@
 var assert = require("assert"),
-	baseStore = require("store/memory").Memory(),
-	cachingStore = require("store/memory").Memory(),
-	cachedStore = require("store/cache").Cache(baseStore, cachingStore);
+	baseStore = require("../../store/memory").Memory(),
+	cachingStore = require("../../store/memory").Memory(),
+	cachedStore = require("../../store/cache").Cache(baseStore, cachingStore);
 
 cachedStore.put({name:"Instance of cached store"});
 exports.testCached = function(){

@@ -49,14 +49,16 @@
     "url":"http://github.com/kriszyp/tunguska"
   },
   "directories": {
-    "lib": "./lib"
+    "lib": "."
   },
   "dependencies":{
-    "tunguska": ">=0.2.2",
-    "rql": ">=0.2.2",
-    "patr": ">=0.2.2",
-    "promised-io": ">=0.2.2",
-    "commonjs-utils": ">=0.2.2",
+    "tunguska": ">0.2.4",
+    "rql": ">0.2.2",
+    "promised-io": ">0.2.3",
+    "commonjs-utils": ">0.2.2",
     "mongodb": "*"
+  },
+  "devDependencies": {
+    "patr": ">0.2.6"
   }
 }

@@ -1,7 +1,7 @@
 var assert = require("assert"),
-	storeA = require("store/memory").Memory(),
-	storeB = require("store/memory").Memory(),
-	combinedStore = require("store/aggregate").Aggregate(
+	storeA = require("../../store/memory").Memory(),
+	storeB = require("../../store/memory").Memory(),
+	combinedStore = require("../../store/aggregate").Aggregate(
 		[storeA, storeB],
 		[["foo"],["bar"]]);
 	
