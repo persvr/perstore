@@ -6,11 +6,11 @@
  * See tests/inherited.js for an example.   
  */
 var getLink = require("commonjs-utils/json-schema").getLink,
-	promise = require("promised-io/promise");
+	promise = require("promised-io/promise"),
 	subSchemas = {};
 exports.Inherited = function(store, schemaProperty){
 	// TODO: determine the schemaProperty from the schema's "schema" relation
-	schemaProperty = schemaProperty || "$schema";
+	schemaProperty = schemaProperty || "__schema__";
 	var hierarchy = [];
 	var id = promise.defer();
 	var inheritingStore = {};
