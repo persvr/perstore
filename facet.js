@@ -658,7 +658,7 @@ exports.Restrictive = function(appliesTo, schema){
 					return facet.wrap(appliesToPrototype[name].apply(source, args));
 				}
 				if(appliesToPrototype.__noSuchMethod__){
-					return facet.wrap(appliesToPrototype.__noSuchMethod__(name, args, onlyIfAvailable));
+					return facet.wrap(source.__noSuchMethod__(name, args, onlyIfAvailable));
 				}
 			}
 			if(!onlyIfAvailable){
@@ -700,7 +700,7 @@ exports.Permissive = function(appliesTo, schema){
 				return facet.wrap(appliesToPrototype[name].apply(source, args));
 			}
 			if(appliesToPrototype.__noSuchMethod__){
-				return facet.wrap(appliesToPrototype.__noSuchMethod__(name, args, onlyIfAvailable));
+				return facet.wrap(source.__noSuchMethod__(name, args, onlyIfAvailable));
 			}
 			if(!onlyIfAvailable){
 				throw new MethodNotAllowedError(name + " is not allowed");
