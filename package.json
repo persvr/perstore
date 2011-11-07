@@ -10,6 +10,12 @@
     "store",
     "persevere"
   ],
+  "maintainers": [
+  	{
+  		"name": "Kris Zyp",
+  		"email": "kriszyp@gmail.com"
+  	}
+  ],
   "engines": {"node":">=0.1.30", "rhino": true},
   "mappings": {
     "tunguska": "http://github.com/kriszyp/tunguska/zipball/v0.2.2",
@@ -60,5 +66,6 @@
   },
   "devDependencies": {
     "patr": ">0.2.6"
-  }
+  },
+  "jars":["jars/perstore.jar"]
 }
