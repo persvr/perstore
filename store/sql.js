@@ -29,8 +29,8 @@ var safeSqlName = exports.safeSqlName = function(name){
 	return name;
 };
 
-var SQLDatabase = typeof process != "undefined" ? require("../engines/node/lib/store-engine/sql").SQLDatabase :
-	SQLDatabase = require("../engines/rhino/lib/store-engine/sql").SQLDatabase;
+var SQLDatabase = typeof process != "undefined" ? require("../engines/node/store-engine/sql").SQLDatabase :
+	SQLDatabase = require("../engines/rhino/store-engine/sql").SQLDatabase;
 
 
 exports.SQLStore = function(config){

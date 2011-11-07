@@ -4,7 +4,9 @@
  * This relies on the jar file included with Perstore
  */
 
-
+addToClasspath(module.resolve("../jars/commons-dbcp-1.2.2.jar"));
+addToClasspath(module.resolve("../jars/commons-pool-1.5.2.jar"));
+addToClasspath(module.resolve("../jars/perstore.jar"));
 var LazyArray = require("promised-io/lazy-array").LazyArray;
 var drivers = {
 	mysql: "com.mysql.jdbc.Driver",
