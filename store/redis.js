@@ -10,7 +10,7 @@ var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFu
 	when = require('promised-io/promise').when,
 	defer = require('promised-io/promise').defer,
 	jsArray = require('rql/js-array'),
-	JSONExt = require('commonjs-utils/json-ext'),
+	JSONExt = require('../util/json-ext'),
 	redis = require('redis/redis-client');
 
 var RQ = require('rql/parser');
@@ -23,7 +23,7 @@ function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys
 exports.Redis = function(options){
 	redis.debugMode = false;
 	// TODO: fetch real settings
-	var dbOptions = require('commonjs-utils/settings').database || {};
+	var dbOptions = require('../util/settings').database || {};
 	// mimic documents collection
 	var collection = options.collection || 'doc';
 	var schema;

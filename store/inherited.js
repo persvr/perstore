@@ -5,7 +5,7 @@
  * is added to the instances to indicate what schema/model each instance belongs to.
  * See tests/inherited.js for an example.   
  */
-var getLink = require("commonjs-utils/json-schema").getLink,
+var getLink = require("json-schema/lib/validate").getLink,
 	promise = require("promised-io/promise"),
 	subSchemas = {};
 exports.Inherited = function(store, schemaProperty){

@@ -4,7 +4,7 @@
  
 ({define:typeof define!="undefined"?define:function(factory){module.exports=factory(require);}}).
 define(function(require){
-var JSONExt = require("commonjs-utils/json-ext");
+var JSONExt = require("../util/json-ext");
 var httpRequest = require("promised-io/http-client").request;
 var when = require("promised-io/promise").when;
 

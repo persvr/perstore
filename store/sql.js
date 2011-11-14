@@ -8,7 +8,7 @@ var first = require("promised-io/lazy-array").first,
 	AutoTransaction = require("../transaction").AutoTransaction,
 	parseQuery = require("rql/parser").parseQuery,
 	print = require("promised-io/process").print,
-	defineProperty = require("commonjs-utils/es5-helper").defineProperty,
+	defineProperty = require("../util/es5-helper").defineProperty,
 	when = require("promised-io/promise").when,
 	defer = require("promised-io/promise").defer,
 	sqlOperators = require("rql/parser").commonOperatorMap;
@@ -306,7 +306,7 @@ exports.SQLStore = function(config){
 }
 
 try{
-	var DATABASE = require("commonjs-utils/settings").database;
+	var DATABASE = require("../util/settings").database;
 }catch(e){
 	print("No settings file defined for a database " + e);
 }

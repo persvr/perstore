@@ -3,8 +3,8 @@ var Permissive = require("./facet").Permissive;
 var DefaultStore = require("./stores").DefaultStore,
 	transaction = require("./transaction").transaction,
 	NotFoundError = require("./errors").NotFoundError,
-	defineProperty = require("commonjs-utils/es5-helper").defineProperty,
-	JSONExt = require("commonjs-utils/json-ext"),
+	defineProperty = require("./util/es5-helper").defineProperty,
+	JSONExt = require("./util/json-ext"),
 	fs = require("promised-io/fs");
 
 exports.Store = function(name, store){

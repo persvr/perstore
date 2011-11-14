@@ -190,13 +190,13 @@ require("rql/js-array").operators.revisions = function(revision){
 }
 // Persistent store extends Memory to persist writes to fs
 
-var JSONExt = require("commonjs-utils/json-ext"),
+var JSONExt = require("../util/json-ext"),
 	fs = require("promised-io/fs"),
 	AutoTransaction = require("../transaction").AutoTransaction;
 
 var Persistent = exports.Persistent = function(options) {
 	options = options || {};
-	var path = options.path || require("commonjs-utils/settings").dataFolder || "data";
+	var path = options.path || require("../util/settings").dataFolder || "data";
 	if(options.filename){
 		initializeFile(options.filename);
 	}

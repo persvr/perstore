@@ -1,4 +1,4 @@
-require("commonjs-utils/json-schema").coerce = function(instance, schema){
+require("json-schema/lib/validate").coerce = function(instance, schema){
 	switch(schema.type){
 		case "string": 
 			instance = instance ? instance.toString() : ""; 

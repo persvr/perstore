@@ -199,7 +199,7 @@ exports.MongoDB = function(options){
 		});
 	}
 
-	var dbOptions = require("commonjs-utils/settings").database;
+	var dbOptions = require("../util/settings").database;
 	var url = options.url || dbOptions.url;
 	if(url){
 		sys.puts(url);

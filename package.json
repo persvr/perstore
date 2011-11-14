@@ -22,7 +22,7 @@
     "rql": "jar:http://github.com/kriszyp/rql/zipball/v0.2.2!/",
     "patr": "jar:http://github.com/kriszyp/patr/zipball/v0.2.2!/",
     "promised-io": "jar:http://github.com/kriszyp/promised-io/zipball/v0.2.2!/",
-    "commonjs-utils": "http://github.com/kriszyp/commonjs-utils/zipball/v0.2.2",
+    "json-schema": "http://github.com/kriszyp/json-schema/zipball/v0.2.1",
     "mysql-native": "jar:http://github.com/sidorares/nodejs-mysql-native/zipball/master!/lib/mysql-native/",
     "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/V0.9.4.4!/lib/mongodb/"
   },
@@ -61,7 +61,7 @@
     "tunguska": ">0.2.4",
     "rql": ">0.2.2",
     "promised-io": ">0.2.3",
-    "commonjs-utils": ">0.2.2",
+    "json-schema": ">0.2.1",
     "mongodb": "*"
   },
   "devDependencies": {

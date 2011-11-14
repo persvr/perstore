@@ -5,7 +5,7 @@ var all = require("promised-io/promise").all,
 	when = require("promised-io/promise").when,
     Promise = require("promised-io/promise").Promise,
     LazyArray = require("promised-io/lazy-array").LazyArray,
-	getLink = require("commonjs-utils/json-schema").getLink;
+	getLink = require("json-schema/lib/validate").getLink;
 
 exports.resolver = function resolver(model, getDataModel){
 	// Creates a function for resolving ids that have slash-delimited paths,
@@ -87,7 +87,6 @@ function getFromDataModel(dataModel, path){
 			}
 		}
 	}while(proceed);
-			require("sys").puts("get from " + model.instanceSchema.id + " path: " + path);
 	
     if(model._linkResolving){
         return model.get(path);

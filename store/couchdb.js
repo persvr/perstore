@@ -6,7 +6,7 @@ var http = require("promised-io/http-client"),
     defer = require("promised-io/promise").defer,
     when = require("promised-io/promise").when,
     LazyArray = require("promised-io/lazy-array").LazyArray,
-    settings = require("commonjs-utils/settings");
+    settings = require("../util/settings");
 
 
 function bodyToString(body) {

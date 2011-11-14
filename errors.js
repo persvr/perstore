@@ -1,6 +1,4 @@
-({define:typeof define!="undefined"?define:function(factory){factory(require,exports);}}).
-define(function(require,exports){
-var ErrorConstructor = require("commonjs-utils/extend-error").ErrorConstructor;
+var ErrorConstructor = require("./util/extend-error").ErrorConstructor;
 var AccessError = exports.AccessError = ErrorConstructor("AccessError");
 
 var MethodNotAllowedError = exports.MethodNotAllowedError = ErrorConstructor("MethodNotAllowedError", AccessError);
@@ -12,4 +10,3 @@ NotFoundError.prototype.code = 2;
 
 var PreconditionFailed = exports.PreconditionFailed = ErrorConstructor("PreconditionFailed", DatabaseError);
 PreconditionFailed.prototype.code = 3;
-});

@@ -10,7 +10,7 @@ function BinaryFile(){
 }
 
 var FileSystem = exports.FileSystem = function(options){
-	var fsRoot = require("commonjs-utils/settings").dataFolder || "data"
+	var fsRoot = require("../util/settings").dataFolder || "data"
 	if(options.dataFolder){
 		fsRoot = options.dataFolder.charAt(0) == '/' ? options.dataFolder : fsRoot + '/' + options.dataFolder;
 	}

@@ -9,7 +9,7 @@ var SQLDatabase = require("./sql-engine").SQLDatabase,
 	AutoTransaction = require("../transaction").AutoTransaction,
 	parseQuery = require("../resource-query").parseQuery,
 	print = require("system").print,
-    settings = require("commonjs-utils/settings"),
+    settings = require("../util/settings"),
 	defineProperty = require("es5-helper").defineProperty;
 
 exports.SQLStore = function(config){

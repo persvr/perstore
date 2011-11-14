@@ -7,14 +7,14 @@
 var NotFoundError = require("./errors").NotFoundError,
 	AccessError = require("./errors").AccessError,
 	MethodNotAllowedError = require("./errors").MethodNotAllowedError,
-	defineProperties = require("commonjs-utils/es5-helper").defineProperties,
+	defineProperties = require("./util/es5-helper").defineProperties,
 	LazyArray = require("promised-io/lazy-array").LazyArray,
 	promiseModule = require("promised-io/promise"),
 	when = promiseModule.when,
 	all = promiseModule.all,
-	copy = require("commonjs-utils/copy").copy,
+	copy = require("./util/copy").copy,
 	Query = require("rql/query").Query,
-	substitute = require("commonjs-utils/json-schema").substitute,
+	substitute = require("json-schema/lib/validate").substitute,
 	rpcInvoke = require("./json-rpc").invoke;
 require("./coerce");// patches json-schema
 
@@ -297,8 +297,8 @@ function FacetedStore(store, facetSchema, permissive){
 	// TODO: handle immutable proto
 	return constructor;
 }
-var mustBeValid = require("commonjs-utils/json-schema").mustBeValid;
-var validate = require("commonjs-utils/json-schema").validate;
+var mustBeValid = require("json-schema/lib/validate").mustBeValid;
+var validate = require("json-schema/lib/validate").validate;
 var writableProto = !!({}.__proto__);
 var SchemaControlled = function(facetSchema, sourceClass, permissive){
 	var properties = facetSchema.properties;
