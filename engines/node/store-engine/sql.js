@@ -32,17 +32,17 @@ function MysqlWrapper(params) {
 				errback(new DatabaseError("Cannot commit a transaction with an error"));
 				return;
 			}
-			var cmd = conn.execute(query, args),
-				results = { rows: [] };
+			var charset = require("mysql-native/lib/mysql-native/charset").Charset.by_name(conn.get("charset"));
+			if(charset && charset.name=="utf8") conn.execute("SET NAMES utf8");
+			var cmd = conn.execute(query,args);
 
-			cmd.on('row', function(r) {
-				results.rows.push(r);
-			});
 			cmd.on('result', function() {
 				if (conn.clean && callback) {
-					results.insertId = cmd.insert_id;
-					results.rowsAffected = cmd.affected_rows;
-					callback(results);
+					callback({
+						insertId: cmd.result.insert_id,
+						rowsAffected: cmd.result.affected_rows,
+						rows: cmd.result.rows
+					});
 				}
 			});
 			cmd.on('error', function(err) {
@@ -78,19 +78,21 @@ function MysqlWrapper(params) {
 
 	function throwOnError(cmd, action) {
 		cmd.on('error', function(err) {
+			console.log('Failed to ' + action +
+				(err && err.message ? ': ' + err.message : ''));
 			throw new DatabaseError('Failed to ' + action +
 				(err && err.message ? ': ' + err.message : ''));
 		});
 	}
 
 	function connectMysql(params) {
-		var ret = require("mysql-native/client").createTCPClient(params.host, params.port);
+		var ret = require("mysql-native/lib/mysql-native/client").createTCPClient(params.host, params.port);
 		ret.auto_prepare = true;
 		ret.row_as_hash = true;
 		ret.clean = true;
 
 		throwOnError(ret.connection, 'connect to DB');
-		throwOnError(ret.auth(params.name, params.user, params.pass), 'authenticate');
+		throwOnError(ret.auth(params.name, params.username, params.password), 'authenticate');
 
 		return ret;
 	}
