@@ -1,6 +1,6 @@
 {
   "name": "perstore",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "author": "Kris Zyp",
   "email": "kriszyp@gmail.com",
   "contributors": ["Vladimir Dronnikov <dronnikov@gmail.com>"],
@@ -58,11 +58,10 @@
     "lib": "."
   },
   "dependencies":{
-    "tunguska": ">0.2.4",
-    "rql": ">0.2.2",
-    "promised-io": ">0.2.3",
-    "json-schema": ">0.2.1",
-    "mongodb": "*"
+    "tunguska": ">=0.3.0",
+    "rql": ">=0.3.1",
+    "promised-io": ">=0.3.0",
+    "json-schema": ">=0.2.1"
   },
   "devDependencies": {
     "patr": ">0.2.6"
