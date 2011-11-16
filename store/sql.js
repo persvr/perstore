@@ -246,7 +246,9 @@ exports.SQLStore = function(config){
 				results = results.rows;
 				if(count){
 					results.totalCount = count;
-					results.length = Math.min(limit, count);
+					when(count,function(count) {
+						results.length = Math.min(limit, count);
+					});
 				}
 				return results;
 			});
