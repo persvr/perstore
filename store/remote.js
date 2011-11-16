@@ -85,7 +85,7 @@ function Remote(request, contextUrl){
 				headers.range = "items=" + options.start + '-' + options.end; 
 			}
 			query = query.replace(/\$[1-9]/g, function(t){
-				return JSON.stringify(options.parameters[t.substring(1) - 1]);
+				return JSONExt.stringify(options.parameters[t.substring(1) - 1]);
 			});
 			return when(request({
 				method:"GET",
