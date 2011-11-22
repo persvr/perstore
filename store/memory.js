@@ -233,6 +233,18 @@ var Persistent = exports.Persistent = function(options) {
 				}
 				// populate the store
 				store.setIndex(data);
+				if(options.log === false){
+					// rewrite the file if loging is disabled
+					data = [];
+					for(var i in store.index){
+						data.push(store.index[i]);
+					}
+					buffer = JSONExt.stringify(data);
+					buffer = buffer.substring(0, buffer.length - 1) + ',\n';
+					writeStream.close();
+					writeStream = fs.openSync(filename, "w");
+					writeStream.write(buffer);
+				}
 			}else if(!buffer || buffer.length == 0){
 				writeStream.write("[");
 			}
