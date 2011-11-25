@@ -12,10 +12,10 @@
 //
 
 var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFunction,
-	Connection = require("mongodb/connection").Connection,
-	mongo = require('mongodb/db'),
-	BSON = require('mongodb/bson/bson'),
-	Server = require("mongodb/connections/server").Server,
+	//Connection = require("mongodb/connection").Connection,
+	mongo = require('mongodb'),
+	ObjectId = require('mongodb/lib/mongodb/bson/objectid').ObjectId,
+	Server = mongo.Server,
 	sys = require('util'),
 	defer = require("promised-io/promise").defer,
 	when = require("promised-io/promise").when,
@@ -245,6 +245,9 @@ exports.MongoDB = function(options){
 			collection.findOne({id: id}, function(err, obj){
 				if (err) return deferred.reject(err);
 				if (obj) delete obj._id;
+				if(obj === null){
+					obj = undefined;
+				}
 //dir('GOT:', id, obj, query);
 				//if (???.queryString) {
 				//	var query = ???.queryString;
@@ -269,8 +272,8 @@ exports.MongoDB = function(options){
 				// do an insert, and check to make sure no id matches first
 				collection.findOne(search, function(err, found){
 					if (err) return deferred.reject(err);
-					if (found === undefined) {
-						if (!object.id) object.id = BSON.ObjectID.createPk().toJSON();
+					if (found === null) {
+						if (!object.id) object.id = ObjectID.createPk().toJSON();
 						collection.insert(object, function(err, obj){
 							if (err) return deferred.reject(err);
 							// .insert() returns array, we need the first element
