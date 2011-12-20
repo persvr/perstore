@@ -1,5 +1,7 @@
 Perstore is a cross-platform JavaScript object store interface for mapping persistent 
-objects to various different storage mediums using W3C's [IndexedDB object store API](http://www.w3.org/TR/IndexedDB/#object-store-sync). Perstore
+objects to various different storage mediums using an interface based on
+W3C's [IndexedDB object store API](http://www.w3.org/TR/IndexedDB/#object-store-sync)
+and analogous to the HTTP REST interface. Perstore
 includes JavaScript object-relational mapping for SQL databases, JSON file storage,
 and hopefully support for many other object/document style storage systems that
 provide more direct object storage. Perstore provides model classes that wrap data
@@ -10,23 +12,32 @@ object-capability based security model.
 Setup
 =====
 
-It is recommended that you install Perstore such that it is available in require statements
-under the "perstore" path. This can easily be done with a package mapping compliant module
-loader like [Nodules](http://github.com/kriszyp/nodules) by using a mapping in your 
-package.json:
+Perstore can be installed with NPM via:
 
-    "mappings": {
-	  "perstore": "http://github.com/kriszyp/perstore/zipball/master"
-    }
+	npm install perstore
 
-And you need a local.json file in your current working directory for your application that
-defines any database settings such as connection information. There is a [template
-for local.json](http://github.com/kriszyp/perstore/blob/master/template.local.json).
- 
+However, one of the easiest way to get started with Perstore is to start with the 
+[Persevere example app](http://github.com/kriszyp/persevere-example-wiki),
+which can be installed with:
+
+	npm install persevere-example-wiki
+
+Pintura can be installed in RingoJS likewise:
+
+	ringo-admin install kriszyp/perstore
+
+See the [Persevere installation instructions for more information](http://persvr.org/Page/Installation).
+
+Perstore also requires a local.json file to be present in the current working directory.
+An example of this file can be found [here](https://github.com/kriszyp/persevere-example-wiki/blob/master/local.json).
+
 Model
 =====
 
-Typical usage of Perstore looks like:
+Perstore provides the tools for building data models. With Perstore we can create data
+stores that connect to different database backends. We can then build on the basic
+stores with data model and facets that provide application logic, data constraints,
+access definitions, data change responses, and queries. Typical usage of Perstore looks like:
 
     // first setup the object store, here we use SQL/ORM store
     var store = require("perstore/store/sql").SQLStore({
@@ -36,7 +47,7 @@ Typical usage of Perstore looks like:
     });
     
     // now we can setup a model that wraps the data store
-    var MyModel = require("perstore/model").Model("Example", store, {
+    var MyModel = require("perstore/model")(store, {
     	properties: {
     		// we can define optionally define type constraints on properties
     		foo: String
@@ -64,11 +75,10 @@ Typical usage of Perstore looks like:
 A model is defined with the Model constructor in the "MyModel" module. A Model definition
 may follow the JSON schema definition for contractual constraints (usually defining property
 type constraints in the "properties" property and relations with the "links" property). 
-property. It may also contain a prototype property which defines the prototype object
+property. It may also contain a "prototype" property which defines the prototype object
 for all instances of the model. Methods can be defined on the prototype object, as well
 as directly on the model. REST methods such as get, put, and delete are implemented
-directly on the model, and can be overriden for specific functionality. Perstore roughly 
-follows the [class definition structure used by Persevere 1.0](http://docs.persvr.org/documentation/storage-model/json-schema)
+directly on the model, and can be overridden for specific functionality.
     
 Perstore provides easy to use object persistence mechanism. Persisted model object
 instances have two default methods and a property:
@@ -89,7 +99,7 @@ variable. The object is loaded (via the get call to the model), modified, and sa
 
 Facets provide secure, controlled access to models. The facet module comes provides
 two facet constructors: Permissive and Restrictive. A Permissive facet allows all actions
-on the model by default. Methods can be defined/overriden in the Permissive definition
+on the model by default. Methods can be defined/overridden in the Permissive definition
 to control or disable access to certain functionality. A Restrictive facet only allows read
 access methods by default (get and query). One can define/override methods to allow
 explicit access to other methods such as put or create. An example facet that only
@@ -102,36 +112,19 @@ allows read access and creation of new objects:
     });
 
 Models wrap data stores, which provide the low level interaction with the database or 
-storage system. Perstore comes with several data stores including (in the store directory):
-
-- mongodb - This is object store that uses a MongoDB database for storage.
-- redis - This is object store that uses a Redis database for storage.
-- sql - An SQL-based object store. This stores and retrieves objects as rows in 
-databases. Currently this only fully implemented in Rhino, but the sql data store can easily
-wrap an SQL database provider that simple provides an W3C SQL database style
-executeSql(sql) function.
-- memory - An in-memory data store. None of the data in this store will be persisted
-- js-file - Reads and stores all data in the store from a JSON (with JS extensions for 
-dates and other non-standard JSON types) file.
-- remote - This can connect to a remote HTTP/REST based JSON server to store and 
-retrieve data.
-
-Perstore also includes several store wrappers that can be used to compose more 
-sophisticate stores by adding functionality (also in the store directory):
-
-- cache - Adds in-memory caching support to a provided store
-- aggregate - Combines record data from multiple stores into a single object store
-- replicated - Provides data replication across multiple stores
-- full-text - Adds full text indexing (currently only available in Rhino through Lucene)
-- inherited - Provides a super-sub type relationship between data stores
+storage system. Perstore comes with several data stores including (in the perstore/store directory)
+mongodb, redis, sql, memory, file, and HTTP/remote storage. Perstore also includes 
+several store wrappers that can be used to compose more 
+sophisticated stores by adding functionality (also in the store directory), including cache,
+aggregate, replicated, and inherited. The store implementations and store wrappers
+are described in more detail in the modules section below.
 
 The following is store API for Perstore. The same API is used for data stores, store 
 models, and facets. All of the functions are optional. If they do not exist, it indicates 
 that the store or model does not support or allow the said functionality. All of the 
 functions may return a promise instead of 
 the actual return value if they require asynchronous processing to complete the 
-operation. They are roughly listed in order of importance 
-(get(id) is the most important function):
+operation. They are roughly listed in order of importance:
 
 get(id, directives) - Finds the persisted record with the given identifier from the store and returns 
 an object representation (should always be a new object).
@@ -146,7 +139,7 @@ delete(id, directives) - Deletes the record with the given identifier from the s
 
 query(queryString, directives) - This executes a query against the data store. The 
 queryString parameter defines the actual query, and the options parameter should be
-an object that provides extra information. The following properties on the options
+an object that provides extra information. The following properties on the directives
 object may be included:
 
 - start - The offset index to start at in the result set
@@ -155,12 +148,14 @@ object may be included:
 
 The function should generally return an array representing the result set of the query 
 (unless the query creates a single aggregate object or value). Perstore is designed to leverage [http://github.com/kriszyp/rql](resource query language)
-for querying, and included stores use RQL, although stores can utilize alternate query languages. 
+for querying, and included stores use RQL (although they may not implement every
+feature in RQL), although stores can utilize alternate query languages. 
 
 add(object, directives) - Stores a new record. This acts similar to put, but should only be called
 when the record does not already exist. Stores do not need to implement this 
 method, but may implement for ease of differentiating between creation of new 
-records and updates. This should return the identifier of the newly create record. 
+records and updates. This should return the identifier of the newly create record. If an
+object already exists with the given identity, this should throw an error. 
 
 construct(object, directives) - This constructs a new persistable object. This does not
 actually store the object, but returns an object with a save() method that
@@ -281,8 +276,13 @@ see [[http://github.com/kriszyp/rql]]. This also provides information on
 the parsed query data structure which is important if you want to implement your
 own custom stores.
 
-Transactions
-==========
+# Modules
+
+This section covers the modules that are included with Perstore.
+
+## transaction
+
+    require("perstore/transaction").transaction(doTransaction);
 
 Transactions provide a means for committing multiple changes to a database 
 atomically. The store API includes transaction semantics for communicating transactions
@@ -307,8 +307,7 @@ is ready to send (or aborted for an error).
 
     transactionApp = require("perstore/jsgi/transactional").Transactional(nextApp);
 
-Implementing Transactions
-------------------------
+### Implementing Transactions
 
 If you are writing your store that needs to be transaction aware, there are two 
 different options for implementing transaction handling. The simplest approach is to
@@ -347,7 +346,305 @@ The database object can be registered with:
     });
     
 This transaction method will be called whenever a global transaction is started.
+
+## model
+
+	var Model = require("perstore/model");
+	Model(name, store, schema);
+
+This module provides facitilities for creating data models. The most common function
+to use is the module's return value, the Model constructor. This takes a store and
+a schema. The store is the underlying source of the persisted data for the model,
+and the schema can be used to define data constraints, the prototype, and relations.
+
+The schema object follows the [JSON Schema specification](http://json-schema.org),
+permitting property definition objects to constrain different properties on the data model.
+For example:
+
+	Model(store, {
+		properties: {
+			// we can use the explicit JSON Schema definition object, or the String constructor as a shortcut
+			name: {type: "string"}, 
+			age: {
+				type:"number",
+				minimum: 0,
+				maximum: 125
+			}
+		}
+	});
+
+Data models also follow the store API. The schema object can overwrite the default 
+implementation of the store methods to provide specific functionality. For example,
+we could provide our own implementation of the put() method:
+
+	Model(store, {
+		put: function(object, directives){
+			// our code, implement any logic in here
+			
+			// we can now call the store object to store the data 
+			return store.put(object, directives);
+		},
+		...
+
+The schema object can also include a prototype object. The prototype will be the 
+the base for all instances to inherit methods (and properties) from. 
  
+## facet
+
+	restrictedFacet = require("perstore/facet").Restrictive(model, schema);
+	restrictedFacet = require("perstore/facet").Permissive(model, schema);
+	
+Facets are type of model that wraps an existing model and adds additional constraints
+and/or functionality. Facets allow you to derive different entry points to data models
+with different levels of access and capabilities. Facets can be used with the security
+model to vary access level by user or other entry variables.
+
+The Restrictive facet restricts the model to a readonly data model by default. One
+can override methods to create more specific levels of access. For example, here
+we could define a facet that is readonly except when the object's status is currently in
+draft:
+
+    var facet = require("facet").Restrictive(model, {
+        put: function(object){ // allow create
+        	if(model.get(object.id).status == "draft"){
+            	return model.put(object);
+            }
+        }
+    });
+
+The Permissive facet provides all the capabilities of the underlying data model by default.
+One can then override methods to restrict access, or add JSON Schema constraints
+to constrain the ways that data can be changed through this facet.
+	
+## errors
+
+	throw require("perstore/errors").AccessError(reason);
+	throw require("perstore/errors").MethodNotAllowedError(reason);
+	throw require("perstore/errors").DatabaseError(reason);
+	throw require("perstore/errors").PreconditionFailed(reason);
+
+This module provides a set of error constructors for throwing data errors. These 
+can be used in conjunction with Pintura's error handling middleware to propagate
+errors with known HTTP status codes.
+
+## stores
+
+	store = require("perstore/stores").DefaultStore(options);
+
+This creates a store using the default store for Perstore, which is a Replicated Persistent (perstore/store/memory)
+store. This is the quickest way to create a new store, particularly if you getting a prototype
+up and running.
+
+## store (folder)
+
+The modules in the store folder provide store implementations and store wrappers.
+These provide access to various data sources and add functionality to these stores.
+
+### mongodb
+
+	store = require("perstore/store/mongodb").MongoDB({
+		collection: collection
+	});
+
+This is an object store that uses a MongoDB database for storage. MongoDB provides
+a powerful backend for Perstore because it is specifically designed for JSON-style
+object storage. This store has good querying capabilites, supporting a large set of 
+the RQL operators. This store requires installation
+of the mongodb package (npm install mongodb).
+
+The MongoDB store looks to the local.json for configuration information, using either the
+database.url property or the database.host, database.name, and database.port properties.
+For example, our local.json could configuration the database:
+
+	"database": {
+		"host": "localhost",
+		"name": "wiki",
+	},
+
+(we omitted the port, which defaults to 27017)
+
+We also must indicate which collection to use for the store. This is provided in the options
+parameter to the constructor.
+
+This store is only available for NodeJS.
+
+### sql
+
+	store = require("perstore/store/mongodb").SQLStore({
+		table: table,
+		idColumn: idColumn
+	});
+
+
+This is store connects to an SQL backend and maps SQL rows to objects. RQL queries 
+are converted to SQL, and a large set of the RQL queries are supported. On Node.js, this store requires installation
+of the mysql-native package (npm install mysql-native).
+
+The SQLStore looks to the local.json for configuration information. In Node, it uses the 
+database.type, database.host, database.port, database.name, database.username, and database.password
+properties to connect to the database. For example, our local.json could configuration the database:
+
+	"database": {
+		"type": "mysql",
+		"host": "localhost",
+		"username": "root",
+		"password": "password",
+		"name": "wiki",
+	},
+
+The type parameter indicates which SQL vendor dialect to use. Supported options are 
+"mysql", "sqlite", "derby", "hsqldb", "oracle", "postgres", "mssql". 
+
+In Rhino, the "connection" property is used to configure the database, using a JDBC
+connection string, and a driver property can be used to explicitly identifier the database
+driver class to use (it will be determined from the type parameter otherwise).
+   
+We also must indicate which table and which column is the primary key to use for the store. This is provided in the options
+parameter to the constructor. The configuration parameter to the store can also
+override the configuration information in local.json.
+
+### memory
+
+This module provides an in-memory data store. This actually exports three different
+store constructors for different storage capabilities:
+
+	store = require("perstore/store/memory").Memory(options);
+
+The Memory store keeps all data in memory (no persistence to disk). The options parameter
+can include an optional "log" property indicating whether or not to keep a log of data revisions.
+The "log" parameter defaults to true. 
+
+The options parameter may also include an optional "index" property that is a 
+hash of the all the objects to initialize the store with, where the property names are the
+ids and the property values are the objects in the store.
+
+	store = require("perstore/store/memory").ReadOnly(options);
+
+The ReadOnly store is equivalent to the Memory constructor except it generates a readonly store, and
+does not have any add, put, or delete methods.
+
+	store = require("perstore/store/memory").Persistent(options);
+
+The Persistent store is equivalent to the Memory constructor except it will persist
+the data to a file. The data is persisted to a file in extended JSON format. The options
+parameter for the store supports an optional "file" parameter or "path" parameter to
+specify the filename of the target file for persisting data, or the directory path to store
+files.
+
+The Persistent store is the default store for Perstore.
+
+### redis
+
+	store = require("perstore/store/redis").Redis({
+		collection: collection
+	});
+
+This is object store that uses a Redis database for storage. This requires the installation
+of the redis package.
+
+### remote
+
+	store = require("perstore/store/remote").Remote(request, url);
+
+This can connect to a remote HTTP/REST based JSON server to store and 
+retrieve data. The optional request parameter is the function that will perform the 
+remote requests, and defaults to an HTTP requester if no value is provided. The
+url specifies the URL of target server.
+
+
+Perstore also includes several store wrappers that can be used to compose more 
+sophisticated stores by adding functionality (also in the store directory), including cache,
+aggregate, replicated, and inherited. The store implementations and store wrappers
+are described in more detail in the modules section below.
+
+### cache
+
+	store = require("perstore/store/cache").Cache(masterStore, cacheStore, options);
+
+This module adds caching support to a provided store. The main store is the first
+parameter, and data retrieved from that store is cached in the provided cacheStore.
+Typically the cacheStore would be an in-memory store, to provide quick access to
+frequently accessed data. The options parameter provides several configuration options:
+
+* defaultExpiresTime - Default amount of time before an object in the cache expires in milliseconds, defaults to 2000.
+* cleanupInterval - Amount of time before cleaning up expired objects in the cache, in milliseconds, defaults to 1000.
+* cacheWrites - Determines whether or not to cache writes to the caching store (all writes go to the master store), defaults to true.
+
+### aggregate
+
+	store = require("perstore/store/aggregate").Aggregate(stores, properties);
+
+This store combines record data from multiple stores into a single object store. The
+stores argument should be an array of stores. When an object is requested, the request
+is made to each of the stores, and the returned objects are mixed together. When 
+a write is performed, the object can then be split up into the properties that are handled
+by each of the underlying stores. The properties argument specifies the properties
+for each store. The properties argument should be an array (where each entry defines the 
+properties for the store with the corresponding index) of arrays of strings with the names
+of the properties for each store.
+
+### notifying
+
+	notifyingStore = require("perstore/store/notifying").Notifying(sourceStore);
+
+This store wrapper adds notification support to stores, allowing store consumers to
+listen for data changes. We can listen for data changes by making a subscription and
+adding a listener:
+
+	notifyingStore.subscribe("*").observe(listener);
+
+### replicated
+
+	store = require("perstore/store/replicated").Replicated(sourceStore);
+
+This store wrapper provides data replication across different processes. This is needed for memory
+stores in a multi-process applications where all processes need to be synchronized
+access to data that is stored in separate memory spaces for each process.
+
+### inherited
+
+	superStore = require("perstore/store/inherited").Inherited(sourceStore);
+	subStore = require("perstore/store/inherited").Inherited(sourceStore);
+
+Inherited provides a super-sub type relationship between data stores. The Inherited constructor
+adds support for distinguishing different types in storage. The hierarchical relationships
+must be defined at the model level with the schema "extends" property. 
+
+## util (folder)
+
+The util folder includes various utility modules used by Perstore.
+
+### json-ext
+
+	jsonString = require("perstore/util/json-ext").stringify(object);
+	object = require("perstore/util/json-ext").parse(jsonString);
+
+This provides support for JavaScript based object literals that extend basic JSON. This module
+can serialize and parse JSON-style object literals with constructs including NaN, Infinity, 
+undefined, and primitive function constructors (String, Number, etc.)
+
+### settings
+
+	mySetting = require("perstore/util/settings").mySetting;
+	
+This module parses the JSON in the local.json file found in the current working directory
+and puts all the properties on the module's export.
+
+### extend-error
+
+	CustomTypeError = require("perstore/util/extend-error")(TypeError, "CustomTypeError");
+
+This module provides an easy tool to create custom error constructors.
+
+## jsgi
+
+### transactional
+
+    transactionApp = require("perstore/jsgi/transactional").Transactional(nextApp);
+
+This module is a JSGI middleware module providing transaction wrapping around
+a request/response cycle. See the Transaction section above for more information.
+
 Licensing
 --------
 
