@@ -33,8 +33,8 @@ var Model = function(store, schema) {
 	return schema;
 };
 Model.Model = Model;
-Model.Store = function(name, store){
-	Model(name, store,  {});//(store.getSchema ? store.getSchema() : {});
+Model.Store = function(store){
+	Model(store,  {});//(store.getSchema ? store.getSchema() : {});
 }
 
 
