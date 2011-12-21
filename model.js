@@ -26,7 +26,7 @@ var Model = function(store, schema) {
 	}
 	defineProperty(schema, "transaction", {
 		get: function(){
-			return Model.currentTransaction;
+			return require("./transaction").currentTransaction;
 		}
 	});
 
@@ -36,37 +36,6 @@ Model.Model = Model;
 Model.Store = function(store){
 	Model(store,  {});//(store.getSchema ? store.getSchema() : {});
 }
-
-
-Model.transaction = function(){
-	var dbTransaction = transaction();
-	return Model.currentTransaction = {
-		get: Model.openObjectStore,
-		commit: function(){
-			try{
-				dbTransaction.commit();
-			}
-			finally{
-				Model.currentTransaction = null;
-			}
-		},
-		abort: function(){
-			try{
-				dbTransaction.abort();
-			}
-			finally{
-				Model.currentTransaction = null;
-			}
-		},
-		suspend: function(){
-			dbTransaction.suspend();
-		},
-		resume: function(){
-			dbTransaction.resume();
-		}
-	}
-
-};
 
 var modelPaths = {};
 Model.initializeRoot = function(dataModel, addClass){
