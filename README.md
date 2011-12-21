@@ -22,7 +22,7 @@ which can be installed with:
 
 	npm install persevere-example-wiki
 
-Pintura can be installed in RingoJS likewise:
+Perstore can be installed in RingoJS likewise:
 
 	ringo-admin install kriszyp/perstore
 
