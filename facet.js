@@ -616,7 +616,7 @@ exports.findBestFacet = function(store, facets){
 
 
 function Facet(appliesTo, schema, permissive){
-	var baseFacetedStore = FacetedStore(appliesTo, schema);
+	var facetedStore, baseFacetedStore = FacetedStore(appliesTo, schema);
 	var createWrap = SchemaControlled(schema, appliesTo, permissive);
 	baseFacetedStore.wrap = createWrap(baseFacetedStore);
 	function FacetForStore(sourceStore, transaction){
