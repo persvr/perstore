@@ -17,19 +17,19 @@ Perstore can be installed with NPM via:
 	npm install perstore
 
 However, one of the easiest way to get started with Perstore is to start with the 
-[Persevere example app](http://github.com/kriszyp/persevere-example-wiki),
+[Persevere example app](http://github.com/persvr/persevere-example-wiki),
 which can be installed with:
 
 	npm install persevere-example-wiki
 
 Perstore can be installed in RingoJS likewise:
 
-	ringo-admin install kriszyp/perstore
+	ringo-admin install persvr/perstore
 
 See the [Persevere installation instructions for more information](http://persvr.org/Page/Installation).
 
 Perstore also requires a local.json file to be present in the current working directory.
-An example of this file can be found [here](https://github.com/kriszyp/persevere-example-wiki/blob/master/local.json).
+An example of this file can be found [here](https://github.com/persvr/persevere-example-wiki/blob/master/local.json).
 
 Model
 =====
@@ -147,7 +147,7 @@ object may be included:
 - parameters - An array of values for parameterized queries
 
 The function should generally return an array representing the result set of the query 
-(unless the query creates a single aggregate object or value). Perstore is designed to leverage [http://github.com/kriszyp/rql](resource query language)
+(unless the query creates a single aggregate object or value). Perstore is designed to leverage [http://github.com/persvr/rql](resource query language)
 for querying, and included stores use RQL (although they may not implement every
 feature in RQL), although stores can utilize alternate query languages. 
 
@@ -189,7 +189,7 @@ in Perstore is a JavaScript object with any or all of the functions defined abov
 Querying
 ========
 
-Perstore provides a query parsing and execution through [http://github.com/kriszyp/rql](resource query language) 
+Perstore provides a query parsing and execution through [http://github.com/persvr/rql](resource query language) 
 (RQL). RQL can be thought as basically a set of
 nestable named operators which each have a set of arguments. RQL is designed to
 have an extremely simple, but extensible grammar that can be written in a URL friendly query string. A simple RQL
@@ -272,7 +272,7 @@ to the query string format. For example:
 	}
 
 For a more a complete reference guide to the RQL and the available query operators,
-see [[http://github.com/kriszyp/rql]]. This also provides information on
+see [[http://github.com/persvr/rql]]. This also provides information on
 the parsed query data structure which is important if you want to implement your
 own custom stores.
 
@@ -663,7 +663,7 @@ See the main Persevere project for more information:
 
 ### Source & Download:
 
-* [http://github.com/kriszyp/perstore/](http://github.com/kriszyp/perstore)
+* [http://github.com/persvr/perstore/](http://github.com/persvr/perstore)
 
 ### Mailing list:
 

@@ -75,7 +75,6 @@ function FacetedStore(store, facetSchema){
 		var propDef = properties[i];
 		if(propDef.readonly || propDef.blocked){
 			needsOldVersion = true;
-			break;
 		}
 		if(propDef.indexed){
 			indexedProperties[i] = true;

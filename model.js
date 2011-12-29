@@ -34,7 +34,7 @@ var Model = function(store, schema) {
 };
 Model.Model = Model;
 Model.Store = function(store){
-	Model(store,  {});//(store.getSchema ? store.getSchema() : {});
+	return Model(store,  {});//(store.getSchema ? store.getSchema() : {});
 }
 
 var modelPaths = {};
