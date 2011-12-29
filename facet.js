@@ -667,9 +667,6 @@ exports.Restrictive = function(appliesTo, schema){
 			}
 			return null;
 		};
-		if(appliesToPrototype.get){
-			schemaPrototype.get = DELEGATE;
-		}
 	}
 	var facet = Facet(appliesTo, schema);
 	if(!schema.query){
@@ -690,7 +687,6 @@ exports.Restrictive = function(appliesTo, schema){
 	return facet;
 
 };
-var DELEGATE = function(){};
 exports.Permissive = function(appliesTo, schema){
 	schema = schema || {quality:0.5};
 	var appliesToPrototype = appliesTo.prototype;
@@ -708,9 +704,6 @@ exports.Permissive = function(appliesTo, schema){
 			}
 			return null;
 		};
-		if(appliesToPrototype.get){
-			schemaPrototype.get = DELEGATE;
-		}
 	}
 	var facet = Facet(appliesTo, schema, true);
 	for(var i in appliesTo){
