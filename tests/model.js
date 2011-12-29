@@ -1,7 +1,7 @@
 var assert = require("assert"),
-	store = require("../stores").DefaultStore("TestStore"),
+	store = require("../stores").DefaultStore(),
 	model = require("../model").Model(store, {
-		prototype: {		
+		prototype: {
 			testMethod: function(){
 				return this.foo;
 			}
@@ -41,7 +41,7 @@ exports.CreateTests = function(model){
 			});
 			assert.equal(count, 1);
 		},
-		
+
 		testSave: function(){
 			var object = model.get(1);
 			var newRand = Math.random();
