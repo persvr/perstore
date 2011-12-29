@@ -15,16 +15,19 @@ for(var i in permissiveTests){
 }
 exports.testExtraStaticMethod = function(){
 	assert.equal(permissiveFacet.extraStaticMethod(), 4);
-}
+};
 
 var restrictiveFacet = Restrictive(model);
 var restrictiveTests = CreateTests(restrictiveFacet);
 
-exports.testGetRestrictive = restrictiveTests.testGet;
-exports.testLoadRestrictive = restrictiveTests.testLoad;
-exports.testSaveRestrictive = shouldFail(restrictiveTests.testSave);
-exports.testMethodRestrictive = shouldFail(restrictiveTests.testMethod);
-exports.testStaticMethodRestrictive = shouldFail(restrictiveTests.testStaticMethod);
+restrictiveTests.testSave = shouldFail(restrictiveTests.testSave);
+restrictiveTests.testMethod = shouldFail(restrictiveTests.testMethod);
+restrictiveTests.testStaticMethod = shouldFail(restrictiveTests.testStaticMethod);
+restrictiveTests.testQuery = shouldFail(restrictiveTests.testQuery);
+
+for(i in restrictiveTests){
+	exports[i + "Restrictive"] = restrictiveTests[i];
+}
 
 function shouldFail(test){
 	return function(){
