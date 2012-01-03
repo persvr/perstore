@@ -70,7 +70,7 @@ var baseTests = {
 
 		model = new Model(store, schema);
 
-		assert.equal(model, schema);
+		assert.strictEqual(model, schema);
 
 		actual = model(obj);
 		assert.strictEqual(calledWith, obj);
@@ -229,7 +229,7 @@ exports.CreateTests = function(model){
 
 			model = new Model(store, schema);
 
-			assert.equal(model.instanceSchema, schema);
+			assert.strictEqual(model.instanceSchema, schema);
 		},
 
 		'test model.query throws error if neither schema nor model define query': function () {
@@ -320,13 +320,13 @@ exports.CreateTests = function(model){
 
 			instance = model();
 
-			assert.equal(instance.foo, foo);
+			assert.strictEqual(instance.foo, foo);
 
 			instance = model({
 				foo: 5
 			});
 
-			assert.equal(instance.foo, 5);
+			assert.strictEqual(instance.foo, 5);
 		},
 
 		'test default properties can be functions': function () {
