@@ -227,15 +227,16 @@ exports.stringify = ({}).toSource ?
 
 // Is the value an array?
 
-            if (Object.prototype.toString.apply(value) === '[object Array]') {
+            if (value.forEach) {
 
-// The value is an array. Stringify every element. Use null as a placeholder
+// The value is an array (or forEach-able). Stringify every element. Use null as a placeholder
 // for non-JSON values.
 
                 length = value.length;
-                for (i = 0; i < length; i += 1) {
-                    partial[i] = str(i, value) || 'null';
-                }
+                // TODO: properly handle async forEach
+                value.forEach(function(value, i){
+                	partial[i] = str(i, value) || 'null';
+                });
 
 // Join all of the elements together, separated with commas, and wrap them in
 // brackets.
