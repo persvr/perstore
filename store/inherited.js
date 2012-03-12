@@ -68,7 +68,7 @@ exports.Inherited = function(store, schemaProperty){
 		}
 	};
 	inheritingStore.query = function(query, directives){
-		query = query + "&" + encodeURIComponent(schemaProperty) + "=(" + subSchemas[id] + ")"; 
+		query = query + "&in(" + encodeURIComponent(schemaProperty) + ",(" + subSchemas[id] + "))";
 		return store.query(query, directives);
 	};
 	inheritingStore.put = function(object, directives){

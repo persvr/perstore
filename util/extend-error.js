@@ -7,9 +7,8 @@ function ErrorConstructor(name, superError){
 		var e = new Error(message);
 		e.name = name;
 		var ee = Object.create(ExtendedError.prototype);
-		for(var i in e){
-			ee[i] = e[i];
-		}
+		ee.stack = e.stack;
+		ee.message = e.message;
 		return ee;
 	}
 	ExtendedError.prototype = Object.create(superError.prototype);
