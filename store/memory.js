@@ -76,7 +76,8 @@ var Memory = exports.Memory = function(options){
 	// start with the read-only memory store and add write support
 	var put = store.put = function(object, directives){
 		directives = directives || {};
-		var id = object.id = directives.id || object.id || Math.round(Math.random()*10000000000000);
+		var id = object.id = "id" in object ? object.id :
+					"id" in directives ? directives.id : Math.round(Math.random()*10000000000000);
 		var isNew = !(id in store.index);
 		if("overwrite" in directives){
 			if(directives.overwrite){
@@ -222,8 +223,8 @@ var Persistent = exports.Persistent = function(options) {
 				if(buffer.charAt(0) == '{'){
 					buffer = '[' + buffer;
 				}
-				if(buffer.substring(buffer.length - 2,buffer.length) == ",\n"){
-					buffer = buffer.substring(0, buffer.length - 2) + "]";
+				if(buffer.match(/,\r?\n$/)){
+					buffer = buffer.replace(/,\r?\n$/,']');
 				}
 				try{
 					var data = eval(buffer);
