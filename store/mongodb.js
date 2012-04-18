@@ -14,7 +14,7 @@
 var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFunction,
 	//Connection = require("mongodb/connection").Connection,
 	mongo = require('mongodb'),
-	ObjectID = require('mongodb/lib/mongodb/bson/objectid').ObjectID,
+	ObjectID = require('bson/lib/bson/objectid').ObjectID,
 	Server = mongo.Server,
 	sys = require('util'),
 	defer = require("promised-io/promise").defer,
