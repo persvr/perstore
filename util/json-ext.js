@@ -179,7 +179,7 @@ exports.stringify = ({}).toSource ?
             length,
             mind = gap,
             partial,
-            value = holder[key];
+            value = holder ? holder[key] : key;
 
 
 // If we were called with a replacer function, then call the replacer to
@@ -231,11 +231,10 @@ exports.stringify = ({}).toSource ?
 
 // The value is an array (or forEach-able). Stringify every element. Use null as a placeholder
 // for non-JSON values.
-
                 length = value.length;
                 // TODO: properly handle async forEach
                 value.forEach(function(value, i){
-                	partial[i] = str(i, value) || 'null';
+                	partial[i] = str(value) || 'null';
                 });
 
 // Join all of the elements together, separated with commas, and wrap them in
@@ -248,6 +247,7 @@ exports.stringify = ({}).toSource ?
                           '[' + partial.join(',') + ']';
                 gap = mind;
                 return v;
+
             }
 			if (value instanceof Date){
 				return "new Date(" + value.getTime() + ")";
