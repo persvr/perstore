@@ -30,7 +30,7 @@ exports.Cache = function(store, cacheStore, options){
 			lastAccess[id] = now++;
 			if(!cached){
 				if(store){
-					cacheStore.put(cached = store.get[id], {id:id});
+					cacheStore.put(cached = store.get(id), {id:id});
 				}
 			}
 			return cached;
