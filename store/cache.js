@@ -11,9 +11,10 @@ exports.Cache = function(store, cacheStore, options){
 	var cleanupInterval = options.cleanupInterval || 1000;
 	var lastAccess = {};
 	var nextCheck = new Date().getTime();
+	var now;
 	cleanup();
 	function cleanup(){
-		var now = new Date().getTime();
+		now = new Date().getTime();
 		if(now > nextCheck){
 			nextCheck = now + cleanupInterval;
 			return when(cacheStore.query("expires<$1", {parameters:[now]}), function(results){
