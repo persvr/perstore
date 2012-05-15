@@ -1,8 +1,7 @@
 /**
  * This is a wrapper store that can add caching to a store
  */
-var table = {},
-	when = require("promised-io/promise").when;
+var when = require("promised-io/promise").when;
 	
 exports.Cache = function(store, cacheStore, options){
 	options = options || {};
