@@ -24,10 +24,6 @@ var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFu
 
 var RQ = require("rql/parser");
 //RQ.converters["default"] = exports.converters.auto;
-RQ.converters['re'] = function(x){
-dir('RECONV:', x);
-	return new RegExp(x, 'i');
-};
 
 // candidate for commonjs-utils?
 function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys.debug(sys.inspect(arguments[i]));}
