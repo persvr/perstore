@@ -470,7 +470,7 @@ This store is only available for NodeJS.
 
 ### sql
 
-	store = require("perstore/store/mongodb").SQLStore({
+	store = require("perstore/store/sql").SQLStore({
 		table: table,
 		idColumn: idColumn
 	});
