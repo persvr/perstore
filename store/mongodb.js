@@ -179,7 +179,7 @@ function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys
 	}
 
 // this will return a data store
-exports.MongoDB = function(options){
+module.exports = function(options){
 	var ready = defer();
 	var collection, schema;
 
@@ -380,3 +380,4 @@ exports.MongoDB = function(options){
 		}
 	}
 }
+module.exports.MongoDB = module.exports;
