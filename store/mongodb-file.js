@@ -20,7 +20,8 @@ module.exports = function(options){
 			var metadata = {
 				"content-type": object.type,
 				"content-length": contents.buffer.length,
-				"content-disposition": 'attachment'
+				"content-disposition": 'attachment',
+				"filename": object.filename
 			};
 			metadata.alternates = [object];
 			object.forEach.binary = true;
