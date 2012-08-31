@@ -273,7 +273,7 @@ function FacetedStore(store, facetSchema){
 		}
 		if(!directives.id){
 			// create a new object
-			return this.add(props);
+			return this.add(props, directives);
 		}
 		else{
 			// check to see if it is an RPC object
