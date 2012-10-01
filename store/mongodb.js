@@ -275,7 +275,7 @@ module.exports = function(options){
 							// .insert() returns array, we need the first element
 							obj = obj && obj[0];
 							if (obj) delete obj._id;
-							deferred.resolve(obj);
+							deferred.resolve(obj.id);
 						});
 					} else {
 						deferred.reject(id + " exists, and can't be overwritten");
@@ -285,7 +285,7 @@ module.exports = function(options){
 				collection.update(search, object, {upsert: directives.overwrite}, function(err, obj){
 					if (err) return deferred.reject(err);
 					if (obj) delete obj._id;
-					deferred.resolve(obj);
+					deferred.resolve(id);
 				});
 			}
 			return deferred;
