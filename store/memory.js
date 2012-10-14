@@ -197,11 +197,11 @@ var JSONExt = require("../util/json-ext"),
 
 var Persistent = exports.Persistent = function(options) {
 	options = options || {};
-	var path = options.path || require("../util/settings").dataFolder || "data";
+	var path = options.path || require("../util/settings").dataFolder || "data",
+		store = Memory(options);
 	if(options.filename){
 		initializeFile(options.filename);
 	}
-	var store = Memory(options);
 	function initializeFile(filename){
 		if(!filename){
 			throw new Error("A path/filename must be provided to the store");
