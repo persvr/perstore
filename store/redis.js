@@ -4,7 +4,7 @@
  * This can be automatically resolved by adding the following line to your
  * package.json "mappings" object if you are using a package mapping aware module
  * loader (like Nodules):
- * "redis": "jar:http://github.com/fictorial/redis-node-client/zipball/master!/lib/",
+ * "redis": "jar:https://github.com/mranney/node_redis/zipball/master!/lib/",
  */
 var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFunction,
 	when = require('promised-io/promise').when,
@@ -46,7 +46,7 @@ exports.Redis = function(options){
 	// connect to DB
 	var db = redis.createClient();//dbOptions.port, dbOptions.host, {});
 	var ready = defer();
-	db.addListener('connected', function(){
+	db.addListener('ready', function(){
 		ready.resolve();
 	});
 
