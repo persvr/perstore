@@ -19,6 +19,21 @@ var RQ = require('rql/parser');
 // candidate for commonjs-utils?
 function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys.debug(sys.inspect(arguments[i]));}
 
+// Port from fictorial/redis-node-client
+function convertMultiBulkBuffersToUTF8Strings(o){
+	var i;
+    if (o instanceof Array) {
+        for (i=0; i<o.length; ++i)
+            if (o[i] instanceof Buffer)
+                o[i] = o[i].utf8Slice(0, o[i].length);
+    } else if (o instanceof Object) {
+        var props = Object.getOwnPropertyNames(o);
+        for (i=0; i<props.length; ++i)
+            if (o[props[i]] instanceof Buffer)
+                o[props[i]] = o[props[i]].utf8Slice(0, o[props[i]].length);
+    }
+}
+
 // this will return a data store
 exports.Redis = function(options){
 	redis.debugMode = false;
@@ -92,7 +107,7 @@ exports.Redis = function(options){
 			db.hgetall(collection+':'+path.shift(), function(err, obj){
 				if (err) {promise.reject(err); throw new URIError(err);}
 				if (obj) {
-					redis.convertMultiBulkBuffersToUTF8Strings(obj);
+					convertMultiBulkBuffersToUTF8Strings(obj);
 					redisHashToRealHash(obj);
 //dir('GET', obj);
 					if (!obj.id) obj.id = id;
@@ -107,6 +122,7 @@ exports.Redis = function(options){
 			return promise;
 		},
 		put: function(object, directives){
+			directives = directives || {};
 			var promise = defer();
 			function _put(id, object){
 				// store the object
@@ -142,6 +158,7 @@ exports.Redis = function(options){
 			return promise;
 		},
 		'delete': function(id, directives){
+			directives = directives || {};
 			var promise = defer();
 			/*if (id.charAt(0) === '?') {
 				// FIXME: never happens -- redis won't accept ?name=value
@@ -162,6 +179,7 @@ exports.Redis = function(options){
 			return promise;
 		},
 		query: function(query, directives){
+			directives = directives || {};
 			if(typeof query === 'string'){
 				query = RQ.parseQuery(query);
 			}
@@ -276,7 +294,7 @@ exports.Redis = function(options){
 //dir('REQ:', args);
 			return callAsync(db.sort, args).then(function(results){
 				// FIXME: should be async?
-				redis.convertMultiBulkBuffersToUTF8Strings(results);
+				convertMultiBulkBuffersToUTF8Strings(results);
 				if (!results) results = [];
 ////
 				/*results = results.toString('UTF8');
