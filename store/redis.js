@@ -11,7 +11,7 @@ var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFu
 	defer = require('promised-io/promise').defer,
 	jsArray = require('rql/js-array'),
 	JSONExt = require('../util/json-ext'),
-	redis = require('redis/redis-client');
+	redis = require('redis');
 
 var RQ = require('rql/parser');
 //RQ.converters['default'] = exports.converters.auto;
