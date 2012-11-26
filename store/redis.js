@@ -49,7 +49,7 @@ exports.Redis = function(options){
 	if(options.url){
 		var redisUrl = url.parse(options.url);
 		db = redis.createClient(redisUrl.port, redisUrl.hostname);
-		redis.auth(redisUrl.auth.split(":")[1]);
+		db.auth(redisUrl.auth.split(":")[1]);
 	}else{
 		db = redis.createClient();//dbOptions.port, dbOptions.host, {});
 	}
