@@ -54,7 +54,8 @@ exports.Redis = function(options){
 		db = redis.createClient();//dbOptions.port, dbOptions.host, {});
 	}
 	var ready = defer();
-	db.addListener('ready', function(){
+	db.once("ready", function(){
+		// Sometimes a ready is thrown more than once
 		ready.resolve();
 	});
 
