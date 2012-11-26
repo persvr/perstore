@@ -11,7 +11,8 @@ var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFu
 	defer = require('promised-io/promise').defer,
 	jsArray = require('rql/js-array'),
 	JSONExt = require('../util/json-ext'),
-	redis = require('redis');
+	redis = require('redis'),
+	url = require('url');
 
 var RQ = require('rql/parser');
 //RQ.converters['default'] = exports.converters.auto;
@@ -44,7 +45,14 @@ exports.Redis = function(options){
 	var schema;
 
 	// connect to DB
-	var db = redis.createClient();//dbOptions.port, dbOptions.host, {});
+	var db;
+	if(options.url){
+		var redisUrl = url.parse(options.url);
+		db = redis.createClient(redisUrl.port, redisUrl.hostname);
+		redis.auth(redisUrl.auth.split(":")[1]);
+	}else{
+		db = redis.createClient();//dbOptions.port, dbOptions.host, {});
+	}
 	var ready = defer();
 	db.addListener('ready', function(){
 		ready.resolve();
