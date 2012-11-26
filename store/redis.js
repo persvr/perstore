@@ -107,7 +107,7 @@ exports.Redis = function(options){
 		},
 		get: function(id){
 //dir('GET', arguments);
-			var path = id.split('.');
+			var path = typeof id === "string" ? id.split('.') : [id];
 			var promise = defer();
 ////
 //			db.get(collection+':'+path.shift(), function(err, obj){
