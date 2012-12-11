@@ -4,7 +4,7 @@
  * This can be automatically resolved by adding the following line to your
  * package.json "mappings" object if you are using a package mapping aware module
  * loader (like Nodules):
- * "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/master!/lib/mongodb/"
+ * "mongodb": "jar:http://github.com/mongodb/node-mongodb-native/zipball/master!/lib/mongodb/"
  */
 
 //
@@ -31,6 +31,7 @@ function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys
 	function parse(query, directives){
 //dir('MONGO:', query);//, directives);
 			// parse string to parsed terms
+			query = query || "";
 			if(typeof query === "string"){
 				// handle $-parameters
 				// TODO: consider security issues
@@ -211,7 +212,7 @@ module.exports = function(options){
 	}
 	else {
 		var database = options.database || new mongo.Db(dbOptions.name, 
-				new Server(dbOptions.host, dbOptions.port, {}), {});
+				new Server(dbOptions.host, dbOptions.port || 27017, {}), { w: 0 });
 		database.open(function(err, db){
 			if(err){
 				sys.puts("Failed to load mongo database " + dbOptions.name + " error " + err.message);
