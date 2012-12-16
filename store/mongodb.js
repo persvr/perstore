@@ -378,7 +378,9 @@ module.exports = function(options){
 				});
 			});
 			return deferred;
-		}
+		},
+		// directly expose collection for advanced functions
+		collection: collection
 	}
 }
 module.exports.MongoDB = module.exports;
