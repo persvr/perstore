@@ -380,7 +380,9 @@ module.exports = function(options){
 			return deferred;
 		},
 		// directly expose collection for advanced functions
-		collection: collection
+		collection: function(){
+			return collection;
+		}
 	}
 }
 module.exports.MongoDB = module.exports;
