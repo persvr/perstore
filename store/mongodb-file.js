@@ -24,7 +24,8 @@ module.exports = function(options){
 			var metadata = {
 				"content-type": object.type,
 				"content-length": contents.buffer.length,
-				"content-disposition": disposition
+				"content-disposition": disposition,
+				"filename": object.filename
 			};
 			metadata.alternates = [object];
 			object.forEach.binary = true;
