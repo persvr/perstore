@@ -126,18 +126,18 @@ functions may return a promise instead of
 the actual return value if they require asynchronous processing to complete the 
 operation. They are roughly listed in order of importance:
 
-get(id, directives) - Finds the persisted record with the given identifier from the store and returns 
+* get(id, directives) - Finds the persisted record with the given identifier from the store and returns 
 an object representation (should always be a new object).
 
-put(object, directives) - Stores the given object in storage. The record may or may not 
+* put(object, directives) - Stores the given object in storage. The record may or may not 
 already exist. The optional second parameter 
 defines the primary identifier for storing the object. If the second parameter is omitted, the
 key may be specified the primary identifier property. If that is not specified, the key may be
 auto-generated. The primary identifer for the object should be returned
 
-delete(id, directives) - Deletes the record with the given identifier from the store.
+* delete(id, directives) - Deletes the record with the given identifier from the store.
 
-query(queryString, directives) - This executes a query against the data store. The 
+* query(queryString, directives) - This executes a query against the data store. The 
 queryString parameter defines the actual query, and the options parameter should be
 an object that provides extra information. The following properties on the directives
 object may be included:
@@ -151,21 +151,21 @@ The function should generally return an array representing the result set of the
 for querying, and included stores use RQL (although they may not implement every
 feature in RQL), although stores can utilize alternate query languages. 
 
-add(object, directives) - Stores a new record. This acts similar to put, but should only be called
+* add(object, directives) - Stores a new record. This acts similar to put, but should only be called
 when the record does not already exist. Stores do not need to implement this 
 method, but may implement for ease of differentiating between creation of new 
 records and updates. This should return the identifier of the newly create record. If an
 object already exists with the given identity, this should throw an error. 
 
-construct(object, directives) - This constructs a new persistable object. This does not
+* construct(object, directives) - This constructs a new persistable object. This does not
 actually store the object, but returns an object with a save() method that
 can be called to store the object when it is ready. This method does not apply to stores,
 only models and facets.
 
-subscribe(resource, callback) - Subscribes to changes in the given resource or set of 
+* subscribe(resource, callback) - Subscribes to changes in the given resource or set of 
 resources. The callback is called whenever data is changed in the monitored resource(s).
 
-transaction() - Starts a new transaction for the store. This should return
+* transaction() - Starts a new transaction for the store. This should return
 a transaction object with the following functions. Each of these functions are optional
 and only called if they exist:
 
@@ -440,6 +440,23 @@ up and running.
 The modules in the store folder provide store implementations and store wrappers.
 These provide access to various data sources and add functionality to these stores.
 
+## path
+
+This module provides functionality for resolving path references within data objects. The
+module exports a <code>resolver</code> function, that returns a <code>resolve</code>
+that can be used to resolve references in objects. To get a <code>resolve</code>
+function, call resolver with the a data model (and optionally second argument, a getDataModel function
+that can provide access to the other data models):
+
+	var resolve = require("perstore/path").resolver(myModel);
+
+And then we can use the <code>resolve</code> to resolve a path. If we want to 
+resolve the "foo" property of the object with an id of 11, we could write:
+
+	resolve("11/foo");
+
+And if foo's property value was a reference to another object, this would also be automatically resolved.
+
 ### mongodb
 
 	store = require("perstore/store/mongodb").MongoDB({
@@ -591,7 +608,18 @@ This store wrapper adds notification support to stores, allowing store consumers
 listen for data changes. We can listen for data changes by making a subscription and
 adding a listener:
 
-	notifyingStore.subscribe("*").observe(listener);
+	var subscription = notifyingStore.subscribe("*");
+	subscription.observe(listener);
+	
+And you could later unsubscribe:
+
+	subscription.unsubscribe();
+
+or you can subscribe to a specific object by its id:
+
+	var subscription = notifyingStore.subscribe(id);
+	subscription.observe(listener);
+
 
 ### replicated
 
@@ -632,9 +660,12 @@ and puts all the properties on the module's export.
 
 ### extend-error
 
+This module provides an easy tool to create custom error constructors. To create a custom
+error, provide an argument with the error type you want to extend from (Error or another more specific
+error constructor), and then give it an error name. For example:
+
 	CustomTypeError = require("perstore/util/extend-error")(TypeError, "CustomTypeError");
 
-This module provides an easy tool to create custom error constructors.
 
 ## jsgi
 
