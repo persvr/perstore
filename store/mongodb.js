@@ -24,10 +24,6 @@ var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFu
 
 var RQ = require("rql/parser");
 //RQ.converters["default"] = exports.converters.auto;
-RQ.converters['re'] = function(x){
-dir('RECONV:', x);
-	return new RegExp(x, 'i');
-};
 
 // candidate for commonjs-utils?
 function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys.debug(sys.inspect(arguments[i]));}
@@ -279,7 +275,7 @@ module.exports = function(options){
 							// .insert() returns array, we need the first element
 							obj = obj && obj[0];
 							if (obj) delete obj._id;
-							deferred.resolve(obj);
+							deferred.resolve(obj.id);
 						});
 					} else {
 						deferred.reject(id + " exists, and can't be overwritten");
@@ -289,7 +285,7 @@ module.exports = function(options){
 				collection.update(search, object, {upsert: directives.overwrite}, function(err, obj){
 					if (err) return deferred.reject(err);
 					if (obj) delete obj._id;
-					deferred.resolve(obj);
+					deferred.resolve(id);
 				});
 			}
 			return deferred;

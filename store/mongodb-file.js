@@ -17,10 +17,14 @@ module.exports = function(options){
 				each(contents.buffer);
 			};
 			object["content-type"] = object.type;
+			var disposition = 'attachment';
+			if (object.filename) {
+				disposition += ';filename="' + object.filename + '"';
+			}
 			var metadata = {
 				"content-type": object.type,
 				"content-length": contents.buffer.length,
-				"content-disposition": 'attachment',
+				"content-disposition": disposition,
 				"filename": object.filename
 			};
 			metadata.alternates = [object];
