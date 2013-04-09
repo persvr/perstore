@@ -4,7 +4,8 @@
  * Currently only supports MySQL.
  */
 
-var DatabaseError = require('perstore/errors').DatabaseError;
+var DatabaseError = require('perstore/errors').DatabaseError,
+	DuplicateEntryError = require('perstore/errors').DuplicateEntryError;
 
 var engines = {
 	mysql: MysqlWrapper
@@ -48,8 +49,14 @@ function MysqlWrapper(params) {
 			});
 			cmd.on('error', function(err) {
 				conn.clean = false;
-				if (errback)
-					errback(err);
+				if(errback) {
+					var patt=/^duplicate entry/ig;
+					if(err && patt.test(err.message)) {
+						errback(new DuplicateEntryError(err.message));
+					} else {
+						errback(err);
+					}
+				}
 			});
 		},
 		transaction: function() {
