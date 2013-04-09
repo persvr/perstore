@@ -10,3 +10,8 @@ NotFoundError.prototype.code = 2;
 
 var PreconditionFailed = exports.PreconditionFailed = ErrorConstructor("PreconditionFailed", DatabaseError);
 PreconditionFailed.prototype.code = 3;
+
+var DuplicateEntryError = exports.DuplicateEntryError = ErrorConstructor("DuplicateEntryError", DatabaseError);
+DuplicateEntryError.prototype.code = 4;
+
+var AcceptError = exports.AcceptError = ErrorConstructor("AcceptError");
