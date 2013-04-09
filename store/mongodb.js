@@ -20,7 +20,8 @@ var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFu
 	defer = require("promised-io/promise").defer,
 	when = require("promised-io/promise").when,
 	jsArray = require("rql/js-array"),
-	PreconditionFailed = require("../errors").PreconditionFailed;
+	PreconditionFailed = require("../errors").PreconditionFailed,
+	DuplicateEntryError = require('perstore/errors').DuplicateEntryError;
 
 var RQ = require("rql/parser");
 //RQ.converters["default"] = exports.converters.auto;
@@ -278,7 +279,7 @@ module.exports = function(options){
 							deferred.resolve(obj.id);
 						});
 					} else {
-						deferred.reject(id + " exists, and can't be overwritten");
+						deferred.reject(new DuplicateEntryError(id + " exists, and can't be overwritten"));
 					}
 				});
 			} else {
