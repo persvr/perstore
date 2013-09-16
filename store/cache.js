@@ -10,7 +10,7 @@ exports.Cache = function(store, cacheStore, options){
 	var cleanupInterval = options.cleanupInterval || 1000;
 	var lastAccess = {};
 	var nextCheck = new Date().getTime();
-	var now;
+	var now = 0;
 	cleanup();
 	function cleanup(){
 		now = new Date().getTime();
@@ -29,7 +29,10 @@ exports.Cache = function(store, cacheStore, options){
 			lastAccess[id] = now++;
 			if(!cached){
 				if(store){
-					cacheStore.put(cached = store.get(id), {id:id});
+					var cached = store.get(id);
+					if(cached){
+						cacheStore.put(cached, {id:id});
+					}
 				}
 			}
 			return cached;

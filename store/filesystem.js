@@ -150,13 +150,13 @@ function generateId(object){
 	for(var i = 0; i < exports.depth; i++){
 		id.push(Math.random().toString().substring(2,6));
 	}
-	var filename = object.filename || Math.random().toString().substring(2);
+	var filename = object.name || Math.random().toString().substring(2);
 	id.push(filename);
 	id = id.join("/");
 	var extension = filename.match(/\.[^\.]+$/);
 	var checkedAttachment;
-	if(object["content-type"] && object["content-type"] !== MIME_TYPES[extension && extension[0]]){
-		if(object.filename || !REVERSE_MIME_TYPES[object["content-type"]]){
+	if(object.type && object.type !== MIME_TYPES[extension && extension[0]]){
+		if(object.name|| !REVERSE_MIME_TYPES[object["content-type"]]){
 			id += "$" + object["content-type"];
 			checkedAttachment = true;
 			if(object["content-disposition"] == "attachment"){
