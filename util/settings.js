@@ -9,7 +9,9 @@ if(!read){
 	read = require("file").read;
 }
 try{
-	var settings = JSON.parse(read("local.json").toString("utf8"));
+	var settings;
+	if (typeof java == "object") JSON.parse(getResource("local.json").content);
+	else JSON.parse(read("local.json").toString("utf8"));
 	for(var i in settings){
 		exports[i] = settings[i];
 	}
