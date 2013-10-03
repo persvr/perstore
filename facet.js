@@ -16,6 +16,7 @@ var DatabaseError = require("./errors").DatabaseError,
 	substitute = require("json-schema/lib/validate").substitute,
 	rpcInvoke = require("./json-rpc").invoke;
 require("./coerce");// patches json-schema
+require("./util/ringojs-compat"); // compatibility package for ringojs
 
 exports.Facet = Facet;
 Facet.facetFor = function(store, resolver, mediaType){
@@ -287,7 +288,7 @@ function FacetedStore(store, facetSchema){
 		}
 	};
 
-	constructor.__proto__ = httpHandlerPrototype;
+	constructor = Object.setPrototypeOf ( constructor, httpHandlerPrototype );
 
 	// TODO: handle immutable proto
 	return constructor;
@@ -543,6 +544,7 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 						}
 					}
 				}
+				
 				for(var i in needSourceParameter){
 					// splice in the source argument for each method that needs it
 					(function(param, protoFunc, i){
@@ -553,12 +555,12 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 					})(needSourceParameter[i], facetPrototype[i], i);
 				}
 				if(writableProto && partial === true){
-					source.__proto__ = instancePrototype;
+					source = Object.setPrototypeOf ( source, instancePrototype );
 					wrapped = source;
 				}
 				else{
 					if(wrapped){
-						wrapped.__proto__ = instancePrototype;
+						wrapped = Object.setPrototypeOf ( wrapped, instancePrototype );
 					}
 					else{
 						wrapped = Object.create(instancePrototype);
@@ -627,7 +629,7 @@ function Facet(appliesTo, schema, permissive){
 			facetedStore = function(){
 				return facetedStore.construct.apply(facetedStore, arguments);
 			};
-			facetedStore.__proto__ = baseFacetedStore;
+			facetedStore = Object.setPrototypeOf ( facetedStore, baseFacetedStore );
 			facetedStore.wrap = createWrap(facetedStore);
 		}
 		else{
