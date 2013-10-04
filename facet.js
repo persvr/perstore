@@ -353,7 +353,7 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 					// this handles query results, but probably should create a branch for real arrays
 					var results = LazyArray({
 						some: function(callback){
-							source.some(function(item){
+							return source.some(function(item){
 								callback((item && typeof item == "object" && wrap(item, transaction, item, true)) || item);
 							});
 						},

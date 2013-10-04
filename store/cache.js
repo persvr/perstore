@@ -16,7 +16,7 @@ exports.Cache = function(store, cacheStore, options){
 		now = new Date().getTime();
 		if(now > nextCheck){
 			nextCheck = now + cleanupInterval;
-			return when(cacheStore.query("expires<$1", {parameters:[now]}), function(results){
+			return when(cacheStore.query("_expires<$1", {parameters:[now]}), function(results){
 				results.forEach(function(object){
 					cacheStore["delete"](object.id);
 				});
@@ -39,9 +39,8 @@ exports.Cache = function(store, cacheStore, options){
 		},
 		put: function(object, id){
 			cleanup();
-			if(!object.expires){
-				object.autoExpires = true; 
-				object.expires = new Date().getTime() + defaultExpiresTime;
+			if(!object._expires){
+				setExpires(object);
 			}
 			if(cacheWrites){
 				cacheStore.put(object, id);
@@ -52,9 +51,8 @@ exports.Cache = function(store, cacheStore, options){
 		},
 		add: function(object, id){
 			cleanup();
-			if(!object.expires){
-				object.autoExpires = true; 
-				object.expires = new Date().getTime() + defaultExpiresTime;
+			if(!object._expires){
+				setExpires(object);
 			}
 			if(cacheWrites){
 				cacheStore.add(object, id);
@@ -74,4 +72,15 @@ exports.Cache = function(store, cacheStore, options){
 			cacheStore["delete"](id);
 		}
 	};
+	function setExpires(object){
+		Object.defineProperty(object, '_expires', {
+			value: new Date().getTime() + defaultExpiresTime,
+			enumerable: false
+		});
+		Object.defineProperty(object, '_autoExpires', {
+			value: true,
+			enumerable: false
+		});
+	}
 };
+
