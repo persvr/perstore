@@ -10,10 +10,17 @@ if(!read){
 }
 try{
 	var settings = JSON.parse(read("local.json").toString("utf8"));
-	for(var i in settings){
-		exports[i] = settings[i];
-	}
 }catch(e){
-	e.message += " trying to load local.json, make sure local.json is in your current working directory";
-	throw e;
+	settings = require("rc")("persvr",{
+		"processes": 2,
+		"port": 8082,
+		"repl": true,
+		"replPort": 5555,
+		"security":{
+		},
+		"dataFolder": "data"
+	});
+}
+for(var i in settings){
+	exports[i] = settings[i];
 }
