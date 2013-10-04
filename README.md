@@ -655,8 +655,10 @@ undefined, and primitive function constructors (String, Number, etc.)
 
 	mySetting = require("perstore/util/settings").mySetting;
 	
-This module parses the JSON in the local.json file found in the current working directory
-and puts all the properties on the module's export.
+This module will first look for settings in a local.json file found in the current working directory,
+if it is not available (and you are using node), it will use the [rc configuration loader](https://github.com/dominictarr/rc)
+(if you have it installed) to load settings, using the app name of "persvr", and puts all the properties on the module's export. 
+If you are using node, installing rc (npm install rc) and putting your settings in a .persvrrc file is recommended.
 
 ### extend-error
 
