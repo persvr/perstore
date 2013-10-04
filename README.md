@@ -459,43 +459,19 @@ And if foo's property value was a reference to another object, this would also b
 
 ### mongodb
 
-	store = require("perstore/store/mongodb").MongoDB({
-		collection: collection
-	});
-
-This is an object store that uses a MongoDB database for storage. MongoDB provides
-a powerful backend for Perstore because it is specifically designed for JSON-style
-object storage. This store has good querying capabilites, supporting a large set of 
-the RQL operators. This store requires installation
-of the mongodb package (npm install mongodb).
-
-The MongoDB store looks to the local.json for configuration information, using either the
-database.url property or the database.host, database.name, and database.port properties.
-For example, our local.json could configuration the database:
-
-	"database": {
-		"host": "localhost",
-		"name": "wiki",
-	},
-
-(we omitted the port, which defaults to 27017)
-
-We also must indicate which collection to use for the store. This is provided in the options
-parameter to the constructor.
-
-This store is only available for NodeJS.
-
+A mongodb store is available at [here](https://github.com/persvr/mongodb-store)
+ 
 ### sql
 
-	store = require("perstore/store/mongodb").SQLStore({
+	store = require("perstore/store/sql").SQLStore({
 		table: table,
 		idColumn: idColumn
 	});
 
-
 This is store connects to an SQL backend and maps SQL rows to objects. RQL queries 
-are converted to SQL, and a large set of the RQL queries are supported. On Node.js, this store requires installation
-of the mysql-native package (npm install mysql-native).
+are converted to SQL, and a large set of the RQL queries are supported. On Node.js, 
+you can use the [mysql-store](https://github.com/persvr/mysql-store) (npm install mysql-store) to connect to MySQL databases
+this store requires installation.
 
 The SQLStore looks to the local.json for configuration information. In Node, it uses the 
 database.type, database.host, database.port, database.name, database.username, and database.password
