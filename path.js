@@ -5,7 +5,7 @@ var all = require("promised-io/promise").all,
 	when = require("promised-io/promise").when,
     Promise = require("promised-io/promise").Promise,
     LazyArray = require("promised-io/lazy-array").LazyArray,
-	getLink = require("json-schema/lib/validate").getLink;
+	getLink = require("json-schema/lib/links").getLink;
 
 exports.resolver = function resolver(model, getDataModel){
 	// Creates a function for resolving ids that have slash-delimited paths,
