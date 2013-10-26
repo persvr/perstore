@@ -355,7 +355,7 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 					var results = LazyArray({
 						some: function(callback){
 							source.some(function(item){
-								callback((item && typeof item == "object" && wrap(item, transaction, item, true)) || item);
+								return callback((item && typeof item == "object" && wrap(item, transaction, item, true)) || item);
 							});
 						},
 						length: source.length
