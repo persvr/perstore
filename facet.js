@@ -361,6 +361,8 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 						length: source.length
 					});
 					results.totalCount = source.totalCount;
+					if ( source.lazy == false )
+						results = results.toRealArray ();
 					return results;
 				}
 				var instancePrototype = Object.create(facetPrototype);
