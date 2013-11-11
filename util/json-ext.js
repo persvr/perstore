@@ -47,7 +47,9 @@ exports.parse = function (text) {
         }
     }
 
-
+	if (!text) {
+		return;
+	}
 // Parsing happens in four stages. In the first stage, we replace certain
 // Unicode characters with escape sequences. JavaScript handles many characters
 // incorrectly, either silently deleting them, or treating them as line endings.
