@@ -4,20 +4,36 @@
  * This can be automatically resolved by adding the following line to your
  * package.json "mappings" object if you are using a package mapping aware module
  * loader (like Nodules):
- * "redis": "jar:http://github.com/fictorial/redis-node-client/zipball/master!/lib/",
+ * "redis": "jar:https://github.com/mranney/node_redis/zipball/master!/lib/",
  */
 var convertNodeAsyncFunction = require('promised-io/promise').convertNodeAsyncFunction,
 	when = require('promised-io/promise').when,
 	defer = require('promised-io/promise').defer,
 	jsArray = require('rql/js-array'),
 	JSONExt = require('../util/json-ext'),
-	redis = require('redis/redis-client');
+	redis = require('redis'),
+	url = require('url');
 
 var RQ = require('rql/parser');
 //RQ.converters['default'] = exports.converters.auto;
 
 // candidate for commonjs-utils?
 function dir(){var sys=require('sys');for(var i=0,l=arguments.length;i<l;i++)sys.debug(sys.inspect(arguments[i]));}
+
+// Port from fictorial/redis-node-client
+function convertMultiBulkBuffersToUTF8Strings(o){
+	var i;
+    if (o instanceof Array) {
+        for (i=0; i<o.length; ++i)
+            if (o[i] instanceof Buffer)
+                o[i] = o[i].utf8Slice(0, o[i].length);
+    } else if (o instanceof Object) {
+        var props = Object.getOwnPropertyNames(o);
+        for (i=0; i<props.length; ++i)
+            if (o[props[i]] instanceof Buffer)
+                o[props[i]] = o[props[i]].utf8Slice(0, o[props[i]].length);
+    }
+}
 
 // this will return a data store
 exports.Redis = function(options){
@@ -29,9 +45,17 @@ exports.Redis = function(options){
 	var schema;
 
 	// connect to DB
-	var db = redis.createClient();//dbOptions.port, dbOptions.host, {});
+	var db;
+	if(options.url){
+		var redisUrl = url.parse(options.url);
+		db = redis.createClient(redisUrl.port, redisUrl.hostname);
+		db.auth(redisUrl.auth.split(":")[1]);
+	}else{
+		db = redis.createClient();//dbOptions.port, dbOptions.host, {});
+	}
 	var ready = defer();
-	db.addListener('connected', function(){
+	db.once("ready", function(){
+		// Sometimes a ready is thrown more than once
 		ready.resolve();
 	});
 
@@ -84,7 +108,7 @@ exports.Redis = function(options){
 		},
 		get: function(id){
 //dir('GET', arguments);
-			var path = id.split('.');
+			var path = typeof id === "string" ? id.split('.') : [id];
 			var promise = defer();
 ////
 //			db.get(collection+':'+path.shift(), function(err, obj){
@@ -92,7 +116,7 @@ exports.Redis = function(options){
 			db.hgetall(collection+':'+path.shift(), function(err, obj){
 				if (err) {promise.reject(err); throw new URIError(err);}
 				if (obj) {
-					redis.convertMultiBulkBuffersToUTF8Strings(obj);
+					convertMultiBulkBuffersToUTF8Strings(obj);
 					redisHashToRealHash(obj);
 //dir('GET', obj);
 					if (!obj.id) obj.id = id;
@@ -107,6 +131,7 @@ exports.Redis = function(options){
 			return promise;
 		},
 		put: function(object, directives){
+			directives = directives || {};
 			var promise = defer();
 			function _put(id, object){
 				// store the object
@@ -142,6 +167,7 @@ exports.Redis = function(options){
 			return promise;
 		},
 		'delete': function(id, directives){
+			directives = directives || {};
 			var promise = defer();
 			/*if (id.charAt(0) === '?') {
 				// FIXME: never happens -- redis won't accept ?name=value
@@ -162,6 +188,7 @@ exports.Redis = function(options){
 			return promise;
 		},
 		query: function(query, directives){
+			directives = directives || {};
 			if(typeof query === 'string'){
 				query = RQ.parseQuery(query);
 			}
@@ -276,7 +303,7 @@ exports.Redis = function(options){
 //dir('REQ:', args);
 			return callAsync(db.sort, args).then(function(results){
 				// FIXME: should be async?
-				redis.convertMultiBulkBuffersToUTF8Strings(results);
+				convertMultiBulkBuffersToUTF8Strings(results);
 				if (!results) results = [];
 ////
 				/*results = results.toString('UTF8');

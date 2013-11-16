@@ -29,7 +29,7 @@ exports.Notifying = function(store, options){
 	};
 	store.unsubscribe = function(path, directives){
 		var clientHub = hub;
-		if(directives['client-id']){
+		if(directives && directives['client-id']){
 			clientHub = hub.fromClient(directives['client-id']);
 		}
 		return clientHub.unsubscribe(path, ["put", "delete"]);
@@ -58,7 +58,7 @@ exports.Notifying = function(store, options){
 	if(originalAdd){
 		store.add= function(object, directives){
 			var result = originalAdd(object, directives) || object.id;
-			if(directives.replicated){
+			if(directives && directives.replicated){
 				return result;
 			}		
 			return when(result, function(id){
@@ -75,7 +75,7 @@ exports.Notifying = function(store, options){
 	if(originalDelete){
 		store["delete"] = function(id, directives){
 			var result = originalDelete(id, directives);
-			if(directives.replicated){
+			if(directives && directives.replicated){
 				return result;
 			}
 			return when(result, function(){
