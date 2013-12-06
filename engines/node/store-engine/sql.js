@@ -83,6 +83,9 @@ function MysqlWrapper(params) {
 	};
 
 	function connectMysql(params) {
+		// retain compatibility, database property shouldn't be overwritten
+		params.database = params.name;
+		if(params.pass) params.password = params.pass;
 		var ret = require("mysql2").createConnection(params);
 		ret.connect(function(err) {
 			if(err) throw new DatabaseError(err);
