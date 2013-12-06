@@ -23,7 +23,7 @@
     "patr": "jar:http://github.com/kriszyp/patr/zipball/v0.2.2!/",
     "promised-io": "jar:http://github.com/kriszyp/promised-io/zipball/v0.2.2!/",
     "json-schema": "http://github.com/kriszyp/json-schema/zipball/v0.2.1",
-    "mysql-native": "jar:http://github.com/sidorares/nodejs-mysql-native/zipball/master!/lib/mysql-native/",
+    "mysql2": "http://github.com/sidorares/node-mysql2/zipball/master",
     "mongodb": "jar:http://github.com/christkv/node-mongodb-native/zipball/V0.9.4.4!/lib/mongodb/",
     "redis": "jar:https://github.com/mranney/node_redis/zipball/master!/lib/redis/"
   },
