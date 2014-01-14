@@ -41,8 +41,8 @@ function MysqlWrapper(params) {
 				} else {
 					if(callback) {
 						callback({
-							insertId: conn.insertId,
-							rowsAffected: conn.affectedRows,
+							insertId: this.insertId,
+							rowsAffected: this.affectedRows,
 							rows: _rows
 						});
 					}
