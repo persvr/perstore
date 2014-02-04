@@ -1,11 +1,8 @@
 var Permissive = require("./facet").Permissive;
 
 var DefaultStore = require("./stores").DefaultStore,
-	transaction = require("./transaction").transaction,
-	NotFoundError = require("./errors").NotFoundError,
 	defineProperty = require("./util/es5-helper").defineProperty,
-	JSONExt = require("./util/json-ext"),
-	fs = require("promised-io/fs");
+	JSONExt = require("./util/json-ext");
 
 var Model = function(store, schema) {
 	if(typeof store == "string"){
@@ -35,7 +32,7 @@ var Model = function(store, schema) {
 Model.Model = Model;
 Model.Store = function(store){
 	return Model(store,  {});//(store.getSchema ? store.getSchema() : {});
-}
+};
 
 var modelPaths = {};
 Model.initializeRoot = function(dataModel, addClass){
@@ -74,12 +71,12 @@ function setPath(model, path, name){
 Model.createModelsFromModel = function(sourceModel, models, constructor){
 	// this allows you to create a set of models from another source model. This makes
 	// it easy to have a RESTful interface for creating new models
-	constructor = constructor || Model; 
+	constructor = constructor || Model;
 	models = models || {};
 	sourceModel.query("").forEach(createSchema);
 	if(sourceModel.subscribe){
 		sourceModel.subscribe("*").observe(function(events){
-			createSchema(events.result); 
+			createSchema(events.result);
 		});
 	}
 	function createSchema(schema){
@@ -88,7 +85,7 @@ Model.createModelsFromModel = function(sourceModel, models, constructor){
 		setPath(models[name] = constructor(schema), name, name);
 	}
 	return models;
-}
+};
 
 Model.modelSchema = {
 	maxLimit: Infinity,

@@ -694,7 +694,7 @@ exports.Permissive = function(appliesTo, schema){
 	schema = schema || {quality:0.5};
 	var appliesToPrototype = appliesTo.prototype;
 	if(appliesToPrototype){
-		var schemaPrototype = schema.prototype = schema.prototype || {};
+		var schemaPrototype = schema.prototype = schema.prototype || appliesToPrototype;
 		schemaPrototype.__noSuchMethod__ = function(name, source, args, onlyIfAvailable){
 			if(appliesToPrototype[name]){
 				return facet.wrap(appliesToPrototype[name].apply(source, args));
