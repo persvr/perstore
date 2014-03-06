@@ -158,7 +158,8 @@ exports.LinkResolving = function(model, getDataModel){
         var rawResult = originalQuery.call(this, query, metadata);
         if(model.links.some(function(link){ return link.resolution!==undefined; })){
             return when(rawResult, function(rawResult){
-                var promises = rawResult.map(function(obj){
+            	// check for LazyArray
+                var promises = rawResult[rawResult instanceof LazyArray ? "some" : "map"](function(obj){
                     return resolve.call(self, obj, metadata);
                 });
                 return when(all(promises), function(){ return rawResult; });
