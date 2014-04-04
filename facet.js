@@ -210,12 +210,12 @@ function FacetedStore(store, facetSchema){
 			directives.id = facetSchema.getId(props);
 		}
 		if(typeof props.save !== "function"){
-			try{
-				if(needsOldVersion){
+			if(directives.id && needsOldVersion){
+				try{
 					instance = this.get(directives.id);
 				}
-			}
-			catch(e){
+				catch(e){
+				}
 			}
 			var self = this;
 			return when(instance, function(instance){
