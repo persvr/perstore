@@ -38,9 +38,9 @@ exports.Notifying = function(store, options){
 	if(originalPut){
 		store.put= function(object, directives){
 			if(options && options.revisionProperty){
-				object[options.revisionProperty] = (object[options.revisionProperty] || 0) + 1; 
+				object[options.revisionProperty] = (object[options.revisionProperty] || 0) + 1;
 			}
-			var result = originalPut(object, directives) || object.id;
+			var result = originalPut.call(this, object, directives) || object.id;
 			if(directives && directives.replicated){
 				return result;
 			}
@@ -57,10 +57,10 @@ exports.Notifying = function(store, options){
 	var originalAdd = store.add;
 	if(originalAdd){
 		store.add= function(object, directives){
-			var result = originalAdd(object, directives) || object.id;
+			var result = originalAdd.call(this, object, directives) || object.id;
 			if(directives && directives.replicated){
 				return result;
-			}		
+			}
 			return when(result, function(id){
 				localHub.publish({
 					channel: id,
@@ -74,7 +74,7 @@ exports.Notifying = function(store, options){
 	var originalDelete = store["delete"];
 	if(originalDelete){
 		store["delete"] = function(id, directives){
-			var result = originalDelete(id, directives);
+			var result = originalDelete.call(this, id, directives);
 			if(directives && directives.replicated){
 				return result;
 			}
