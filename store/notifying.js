@@ -25,14 +25,14 @@ exports.Notifying = function(store, options){
 		if(directives && directives['client-id']){
 			clientHub = hub.fromClient(directives['client-id']);
 		}
-		return clientHub.subscribe(path, /*directives.body || */["put", "delete"]);
+		return clientHub.subscribe(path, /*directives.body || */["add", "put", "delete"]);
 	};
 	store.unsubscribe = function(path, directives){
 		var clientHub = hub;
 		if(directives && directives['client-id']){
 			clientHub = hub.fromClient(directives['client-id']);
 		}
-		return clientHub.unsubscribe(path, ["put", "delete"]);
+		return clientHub.unsubscribe(path, ["add", "put", "delete"]);
 	};
 	var originalPut = store.put;
 	if(originalPut){
@@ -48,7 +48,7 @@ exports.Notifying = function(store, options){
 				localHub.publish({
 					channel: id,
 					result: object,
-					type: "put"
+					type: directives && directives.overwrite === false ? "add" : "put"
 				});
 				return id;
 			});
@@ -65,7 +65,7 @@ exports.Notifying = function(store, options){
 				localHub.publish({
 					channel: id,
 					result: object,
-					type: "put"
+					type: "add"
 				});
 				return id;
 			});
