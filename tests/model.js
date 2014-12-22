@@ -1,5 +1,5 @@
 var assert = require("assert"),
-	store = require("../stores").DefaultStore("TestStore"),
+	store = require("../stores").DefaultStore({ filename: "TestStore" }),
 	model = require("../model").Model(store, {
 		prototype: {		
 			testMethod: function(){

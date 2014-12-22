@@ -20,7 +20,7 @@
   "mappings": {
     "tunguska": "http://github.com/kriszyp/tunguska/zipball/v0.2.2",
     "rql": "jar:http://github.com/kriszyp/rql/zipball/v0.2.2!/",
-    "patr": "jar:http://github.com/kriszyp/patr/zipball/v0.2.2!/",
+    "patr": "jar:http://github.com/kriszyp/patr/zipball/v0.2.6!/",
     "promised-io": "jar:http://github.com/kriszyp/promised-io/zipball/v0.2.2!/",
     "json-schema": "http://github.com/kriszyp/json-schema/zipball/v0.2.1",
     "mysql-native": "jar:http://github.com/sidorares/nodejs-mysql-native/zipball/master!/lib/mysql-native/",
@@ -65,7 +65,10 @@
     "json-schema": ">=0.2.1"
   },
   "devDependencies": {
-    "patr": ">0.2.6"
+    "patr": ">=0.2.6"
   },
-  "jars":["jars/perstore.jar"]
+  "jars":["jars/perstore.jar"],
+  "scripts": {
+    "test": "cd tests; node ."
+  }
 }
