@@ -19,91 +19,77 @@ exports.SQLDatabase = function(params) {
 
 function MysqlWrapper(params) {
 	var currentConnection;
-    var x=0;
+	var x=0;
 
-	// adapted from http://github.com/sidorares/nodejs-mysql-native/lib/mysql-native/websql.js
 	return {
 		executeSql: function(query, args, callback, errback) {
-            var conn = currentConnection;
-            if(!conn) {
-                errback(new DatabaseError("No transactional context has been created"));
-                return;
-            }
-			if (!conn.clean) {
-				errback(new DatabaseError("Cannot commit a transaction with an error"));
+			var conn = currentConnection;
+			if(!conn) {
+				errback(new DatabaseError("No transactional context has been created"));
 				return;
 			}
-			var charset = require("mysql-native/lib/mysql-native/charset").Charset.by_name(conn.get("charset"));
-			if(charset && charset.name=="utf8") conn.execute("SET NAMES utf8");
-			var cmd = conn.execute(query,args);
-
-			// use result from callback
-			cmd.on('result', function(result) {
-				if (conn.clean && callback) {
-					callback({
-						insertId: result.insert_id,
-						rowsAffected: result.affected_rows,
-						rows: result.rows
-					});
-				}
-			});
-			cmd.on('error', function(err) {
-				conn.clean = false;
-				if(errback) {
-					var patt=/^duplicate entry/ig;
-					if(err && patt.test(err.message)) {
-						errback(new DuplicateEntryError(err.message));
-					} else {
-						errback(err);
+			var cmd = conn.execute(query,args,function(err,_rows,_fields) {
+				if(err) {
+					if(errback) {
+						var patt=/^duplicate entry/ig;
+						if(err && patt.test(err)) {
+							errback(new DuplicateEntryError(err));
+						} else {
+							errback(err);
+						}
+					}
+				} else {
+					if(callback) {
+						callback({
+							insertId: this.insertId,
+							rowsAffected: this.affectedRows,
+							rows: _rows
+						});
 					}
 				}
 			});
 		},
 		transaction: function() {
 			var conn = connectMysql(params);
-            currentConnection = conn;
-			throwOnError(conn.query('SET autocommit=0;'), 'disable autocommit');
-			throwOnError(conn.query('BEGIN'), 'initialize transaction');
+			currentConnection = conn;
+			conn.query('SET autocommit=0;', function(err) {
+				if(err) throw new DatabaseError(err);
+			});
+			conn.query('BEGIN', function(err) {
+				if(err) throw new DatabaseError(err);
+			});
 
 			return {
 				commit: function() {
-					throwOnError(conn.query("COMMIT"), 'commit SQL transaction');
-					throwOnError(conn.close(), 'close connection');
+					conn.query("COMMIT", function(err) {
+						if(err) throw new DatabaseError(err);
+					});
+					conn.end();
 				},
 				abort: function() {
-					throwOnError(conn.query("ROLLBACK"), 'rollback SQL transaction');
-					throwOnError(conn.close(), 'close connection');
+					conn.query("ROLLBACK", function(err) {
+						if(err) throw new DatabaseError(err);
+					});
+					conn.end();
 				},
-                suspend: function(){
-                    currentConnection = null;
-                },
-                resume: function(){
-                    currentConnection = conn;
-                }
+				suspend: function(){
+					currentConnection = null;
+				},
+				resume: function(){
+					currentConnection = conn;
+				}
 			};
 		}
 	};
 
-	function throwOnError(cmd, action) {
-		cmd.on('error', function(err) {
-			console.log('Failed to ' + action +
-				(err && err.message ? ': ' + err.message : ''));
-			throw new DatabaseError('Failed to ' + action +
-				(err && err.message ? ': ' + err.message : ''));
-		});
-	}
-
 	function connectMysql(params) {
-		var ret = require("mysql-native/lib/mysql-native/client").createTCPClient(params.host, params.port);
-		ret.auto_prepare = true;
-		ret.row_as_hash = true;
-		ret.clean = true;
-
-		// use charset if available
-		if(params.charset) ret.set("charset",params.charset);
-		throwOnError(ret.connection, 'connect to DB');
-		throwOnError(ret.auth(params.name, params.username, params.password), 'authenticate');
-
+		// retain compatibility, database property shouldn't be overwritten
+		params.database = params.name;
+		if(params.pass) params.password = params.pass;
+		var ret = require("mysql2").createConnection(params);
+		ret.connect(function(err) {
+			if(err) throw new DatabaseError(err);
+		});
 		return ret;
 	}
 }
