@@ -158,9 +158,19 @@ exports.LinkResolving = function(model, getDataModel){
         var rawResult = originalQuery.call(this, query, metadata);
         if(model.links.some(function(link){ return link.resolution!==undefined; })){
             return when(rawResult, function(rawResult){
-                var promises = rawResult.map(function(obj){
-                    return resolve.call(self, obj, metadata);
-                });
+            	// check for LazyArray
+                var promises;
+		if(rawResult instanceof LazyArray) {
+			promises = when(rawResult.toRealArray(), function(arr){
+				return arr.map(function(obj){
+					return resolve.call(self, obj, metadata);
+				});
+			});
+		} else {
+			promises = rawResult.map(function(obj){
+				return resolve.call(self, obj, metadata);
+			});
+		}
                 return when(all(promises), function(){ return rawResult; });
             });
         }
