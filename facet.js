@@ -98,7 +98,7 @@ function FacetedStore(store, facetSchema){
 		return this.wrap(facetSchema.query(query, directives), this.transaction);
 	};
 
-	var allowedOperators = constructor.allowedOperators || store.allowedOperators
+	var allowedOperators = constructor.allowedOperators = store.allowedOperators
 		|| {
 			select: true,
 			limit: true, // required
