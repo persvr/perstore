@@ -111,7 +111,7 @@ function FacetedStore(store, facetSchema){
 			gt: "indexed",
 			sort: "indexed"
 		};
-	var maxLimit = constructor.maxLimit || store.maxLimit || 50;
+	var maxLimit = constructor.maxLimit = store.maxLimit || 50;
 
 	constructor.checkQuery = function(query){
 		var lastLimit;
