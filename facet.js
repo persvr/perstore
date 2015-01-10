@@ -98,7 +98,7 @@ function FacetedStore(store, facetSchema){
 		return this.wrap(facetSchema.query(query, directives), this.transaction);
 	};
 
-	var allowedOperators = constructor.allowedOperators || store.allowedOperators
+	var allowedOperators = constructor.allowedOperators = store.allowedOperators
 		|| {
 			select: true,
 			limit: true, // required
@@ -111,7 +111,7 @@ function FacetedStore(store, facetSchema){
 			gt: "indexed",
 			sort: "indexed"
 		};
-	var maxLimit = constructor.maxLimit || store.maxLimit || 50;
+	var maxLimit = constructor.maxLimit = store.maxLimit || 50;
 
 	constructor.checkQuery = function(query){
 		var lastLimit;
