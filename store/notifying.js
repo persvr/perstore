@@ -44,8 +44,14 @@ exports.Notifying = function(store, options){
 			if(directives && directives.replicated){
 				return result;
 			}
+
+			var publishHub = localHub;
+			if(directives && directives['client-id']){
+				publishHub = hub.fromClient(directives['client-id']);
+			}
+
 			return when(result, function(id){
-				localHub.publish({
+				publishHub.publish({
 					channel: id,
 					result: object,
 					type: directives && directives.overwrite === false ? "add" : "put"
@@ -61,8 +67,14 @@ exports.Notifying = function(store, options){
 			if(directives && directives.replicated){
 				return result;
 			}
+
+			var publishHub = localHub;
+			if(directives && directives['client-id']){
+				publishHub = hub.fromClient(directives['client-id']);
+			}
+
 			return when(result, function(id){
-				localHub.publish({
+				publishHub.publish({
 					channel: id,
 					result: object,
 					type: "add"
@@ -78,8 +90,14 @@ exports.Notifying = function(store, options){
 			if(directives && directives.replicated){
 				return result;
 			}
+
+			var publishHub = localHub;
+			if(directives && directives['client-id']){
+				publishHub = hub.fromClient(directives['client-id']);
+			}
+
 			return when(result, function(){
-				localHub.publish({
+				publishHub.publish({
 					channel: id,
 					type: "delete"
 				});
