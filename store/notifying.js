@@ -25,30 +25,36 @@ exports.Notifying = function(store, options){
 		if(directives && directives['client-id']){
 			clientHub = hub.fromClient(directives['client-id']);
 		}
-		return clientHub.subscribe(path, /*directives.body || */["put", "delete"]);
+		return clientHub.subscribe(path, /*directives.body || */["add", "put", "delete"]);
 	};
 	store.unsubscribe = function(path, directives){
 		var clientHub = hub;
 		if(directives && directives['client-id']){
 			clientHub = hub.fromClient(directives['client-id']);
 		}
-		return clientHub.unsubscribe(path, ["put", "delete"]);
+		return clientHub.unsubscribe(path, ["add", "put", "delete"]);
 	};
 	var originalPut = store.put;
 	if(originalPut){
 		store.put= function(object, directives){
 			if(options && options.revisionProperty){
-				object[options.revisionProperty] = (object[options.revisionProperty] || 0) + 1; 
+				object[options.revisionProperty] = (object[options.revisionProperty] || 0) + 1;
 			}
-			var result = originalPut(object, directives) || object.id;
+			var result = originalPut.call(this, object, directives) || object.id;
 			if(directives && directives.replicated){
 				return result;
 			}
+
+			var publishHub = localHub;
+			if(directives && directives['client-id']){
+				publishHub = hub.fromClient(directives['client-id']);
+			}
+
 			return when(result, function(id){
-				localHub.publish({
+				publishHub.publish({
 					channel: id,
 					result: object,
-					type: "put"
+					type: directives && directives.overwrite === false ? "add" : "put"
 				});
 				return id;
 			});
@@ -57,15 +63,21 @@ exports.Notifying = function(store, options){
 	var originalAdd = store.add;
 	if(originalAdd){
 		store.add= function(object, directives){
-			var result = originalAdd(object, directives) || object.id;
+			var result = originalAdd.call(this, object, directives) || object.id;
 			if(directives && directives.replicated){
 				return result;
-			}		
+			}
+
+			var publishHub = localHub;
+			if(directives && directives['client-id']){
+				publishHub = hub.fromClient(directives['client-id']);
+			}
+
 			return when(result, function(id){
-				localHub.publish({
+				publishHub.publish({
 					channel: id,
 					result: object,
-					type: "put"
+					type: "add"
 				});
 				return id;
 			});
@@ -74,12 +86,18 @@ exports.Notifying = function(store, options){
 	var originalDelete = store["delete"];
 	if(originalDelete){
 		store["delete"] = function(id, directives){
-			var result = originalDelete(id, directives);
+			var result = originalDelete.call(this, id, directives);
 			if(directives && directives.replicated){
 				return result;
 			}
+
+			var publishHub = localHub;
+			if(directives && directives['client-id']){
+				publishHub = hub.fromClient(directives['client-id']);
+			}
+
 			return when(result, function(){
-				localHub.publish({
+				publishHub.publish({
 					channel: id,
 					type: "delete"
 				});

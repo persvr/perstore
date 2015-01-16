@@ -98,7 +98,7 @@ function FacetedStore(store, facetSchema){
 		return this.wrap(facetSchema.query(query, directives), this.transaction);
 	};
 
-	var allowedOperators = constructor.allowedOperators || store.allowedOperators
+	var allowedOperators = constructor.allowedOperators = store.allowedOperators
 		|| {
 			select: true,
 			limit: true, // required
@@ -111,7 +111,7 @@ function FacetedStore(store, facetSchema){
 			gt: "indexed",
 			sort: "indexed"
 		};
-	var maxLimit = constructor.maxLimit || store.maxLimit || 50;
+	var maxLimit = constructor.maxLimit = store.maxLimit || 50;
 
 	constructor.checkQuery = function(query){
 		var lastLimit;
@@ -419,7 +419,6 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 								mustBeValid(validation);
 								var isNew = partial === NEW;
 								if(isNew && (typeof facetSchema.add === "function")){ //  || )
-									partial = undefined;
 									id = facetSchema.add(source, directives);
 								}
 								else if(typeof facetSchema.put === "function"){
@@ -446,6 +445,7 @@ var SchemaControlled = function(facetSchema, sourceClass, permissive){
 								}*/
 								return when(id, function(id){
 									if(isNew){
+										partial = undefined;
 										if((typeof id == "string" || typeof id == "number") && promiseModule.currentContext){
 											promiseModule.currentContext.generatedId = id;
 										}
